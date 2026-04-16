@@ -1,23 +1,102 @@
 """
-IT Dashboard — COP1034C Python for IT
-Your Name | Date
+IT Dashboard - COP1034C Python for IT
+Joshua Gordon | 04/14/26
 
-A command-line IT management tool that grows into a full
-desktop application over 4 weeks. Each class session adds
-a new feature to this project.
+Week 2 Project: Server Log Analyzer
 """
 
-# ── Application Metadata ──────────────────────────────────
-APP_NAME = "IT Dashboard"
-VERSION = "0.1.0"
+# Name: Joshua Gordon
+# Course: COP1034C Python for IT
+# Project: Week 2 Server Log Analyzer
 
+# Initialize data structures
+severity_counts = {}
+unique_errors = set()
+critical_events = []
+log_entries = []
 
-def main():
-    """Main entry point. Prints a welcome message for now."""
-    print(f"{APP_NAME} v{VERSION}")
-    print("Ready to build something great.")
+total_lines = 0
+error_count = 0
 
+try:
+    with open("Data/server.log", "r") as file:
+        for line in file:
+            total_lines += 1
+            line = line.strip()
 
-# ── Run the program ───────────────────────────────────────
-if __name__ == "__main__":
-    main()
+            parts = line.split(maxsplit=3)
+
+            if len(parts) < 4:
+                continue
+
+            date = line[:10]
+            time = parts[1]
+            severity = parts[2]
+            message = parts[3]
+
+            # ✅ THIS WHOLE BLOCK MUST BE INDENTED
+            entry = {
+                "date": date,
+                "time": time,
+                "severity": severity,
+                "message": message
+            }
+
+            log_entries.append(entry)
+
+            severity_counts[severity] = severity_counts.get(severity, 0) + 1
+
+            if severity == "ERROR":
+                error_count += 1
+                unique_errors.add(message)
+
+            if severity == "CRITICAL":
+                critical_events.append(message)
+
+except FileNotFoundError:
+    print("Error: server.log file not found.")
+    exit(1)
+
+if total_lines > 0:
+    error_rate = (error_count / total_lines) * 100
+else:
+    error_rate = 0
+
+print("\n====================================")
+print("      SERVER LOG ANALYSIS REPORT")
+print("====================================\n")
+
+print(f"Log File   : Data/server.log")
+print(f"Lines Read : {total_lines}\n")
+
+print(f"INFO     : {severity_counts.get('INFO', 0)}")
+print(f"WARNING  : {severity_counts.get('WARNING', 0)}")
+print(f"ERROR    : {severity_counts.get('ERROR', 0)}")
+print(f"CRITICAL : {severity_counts.get('CRITICAL', 0)}\n")
+
+print(f"Error Rate : {error_rate:.2f}%\n")
+
+print("Unique Errors:")
+for err in unique_errors:
+    print(f"- {err}")
+
+print("\nCritical Events:")
+for event in critical_events:
+    print(f"- {event}")
+
+with open("log_summary.txt", "w") as out:
+    out.write("SERVER LOG ANALYSIS REPORT\n\n")
+    out.write(f"Lines Read: {total_lines}\n")
+    out.write(f"Error Rate: {error_rate:.2f}%\n\n")
+
+    out.write("Severity Counts:\n")
+    for key, value in severity_counts.items():
+        out.write(f"{key}: {value}\n")
+
+    out.write("\nUnique Errors:\n")
+    for err in unique_errors:
+        out.write(f"- {err}\n")
+
+    out.write("\nCritical Events:\n")
+    for event in critical_events:
+        out.write(f"- {event}\n")
