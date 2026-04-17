@@ -1,0 +1,20 @@
+SERVER LOG ANALYSIS REPORT
+
+Lines Read: 41
+Error Rate: 12.20%
+
+Severity Counts:
+INFO: 27
+WARNING: 8
+ERROR: 5
+CRITICAL: 1
+
+Unique Errors:
+- Disk read error on /dev/sdb: I/O timeout
+- Connection refused to mail-relay.internal:587
+- Authentication failure for user: unknown_user (3 attempts)
+- Failed to send alert email: SMTP timeout
+- DNS resolution failed for updates.vendor.com
+
+Critical Events:
+- Service unresponsive: postgres (PID 4521)

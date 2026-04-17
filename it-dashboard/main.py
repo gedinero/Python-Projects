@@ -9,6 +9,8 @@ Week 2 Project: Server Log Analyzer
 # Course: COP1034C Python for IT
 # Project: Week 2 Server Log Analyzer
 
+import os
+
 # Initialize data structures
 severity_counts = {}
 unique_errors = set()
@@ -18,8 +20,12 @@ log_entries = []
 total_lines = 0
 error_count = 0
 
+# 🔥 THIS FIXES ALL PATH ISSUES
+base_dir = os.path.dirname(__file__)
+log_path = os.path.join(base_dir, "Data", "server.log")
+
 try:
-    with open("Data/server.log", "r") as file:
+    with open(log_path, "r") as file:
         for line in file:
             total_lines += 1
             line = line.strip()
@@ -34,7 +40,6 @@ try:
             severity = parts[2]
             message = parts[3]
 
-            # ✅ THIS WHOLE BLOCK MUST BE INDENTED
             entry = {
                 "date": date,
                 "time": time,
@@ -57,16 +62,18 @@ except FileNotFoundError:
     print("Error: server.log file not found.")
     exit(1)
 
+# Calculate error rate
 if total_lines > 0:
     error_rate = (error_count / total_lines) * 100
 else:
     error_rate = 0
 
-print("\n====================================")
-print("      SERVER LOG ANALYSIS REPORT")
-print("====================================\n")
+# Print report
+print("\n==============================")
+print(" SERVER LOG ANALYSIS REPORT ")
+print("==============================\n")
 
-print(f"Log File   : Data/server.log")
+print(f"Log File   : {log_path}")
 print(f"Lines Read : {total_lines}\n")
 
 print(f"INFO     : {severity_counts.get('INFO', 0)}")
@@ -84,7 +91,10 @@ print("\nCritical Events:")
 for event in critical_events:
     print(f"- {event}")
 
-with open("log_summary.txt", "w") as out:
+# Save to file
+output_path = os.path.join(base_dir, "log_summary.txt")
+
+with open(output_path, "w") as out:
     out.write("SERVER LOG ANALYSIS REPORT\n\n")
     out.write(f"Lines Read: {total_lines}\n")
     out.write(f"Error Rate: {error_rate:.2f}%\n\n")
