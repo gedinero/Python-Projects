@@ -1,45 +1,32 @@
 const loginBtn = document.querySelector(".primary-btn");
-const createBtn = document.querySelector(".secondary-btn");
+const usernameInput = document.querySelector('input[type="text"]');
+const passwordInput = document.querySelector('input[type="password"]');
 
-const inputs = document.querySelectorAll("input");
-const usernameInput = inputs[0];
-const passwordInput = inputs[1];
+if (loginBtn) {
+    loginBtn.addEventListener("click", () => {
+        const username = usernameInput.value.trim();
+        const password = passwordInput.value.trim();
 
-// CREATE ACCOUNT
-createBtn.addEventListener("click", () => {
-    const username = usernameInput.value;
-    const password = passwordInput.value;
+        if (username === "" || password === "") {
+            alert("Fill in all fields");
+            return;
+        }
 
-    if (username === "" || password === "") {
-        alert("Fill in all fields");
-        return;
-    }
+        const storedUser = localStorage.getItem(username);
 
-    localStorage.setItem(username, password);
+if (storedUser === null) {
+    alert("User not found");
+    return;
+}
 
-    alert("Account created! You can now login.");
+const parsedUser = JSON.parse(storedUser);
 
-    usernameInput.value = "";
-    passwordInput.value = "";
-});
-
-// LOGIN
-loginBtn.addEventListener("click", () => {
-    const username = usernameInput.value;
-    const password = passwordInput.value;
-
-    const storedPassword = localStorage.getItem(username);
-
-    if (storedPassword === null) {
-        alert("User not found");
-        return;
-    }
-
-    if (storedPassword === password) {
-    localStorage.setItem("currentUser", username);
-    alert("Login successful!");
-    window.location.href = "dashboard.html";
-} else {
-        alert("Incorrect password");
-    }
-});
+if (parsedUser.password === password) {
+            localStorage.setItem("currentUser", username);
+            alert("Login successful!");
+            window.location.href = "dashboard.html";
+        } else {
+            alert("Incorrect password");
+        }
+    });
+}

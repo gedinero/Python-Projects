@@ -219,3 +219,8 @@ body {
         font-size: 2rem;
     }
 }
+.link-btn {
+    display: inline-block;
+    text-align: center;
+    text-decoration: none;
+}
