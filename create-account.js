@@ -5,6 +5,7 @@ createAccountBtn.addEventListener("click", () => {
     const password = document.getElementById("newPassword").value.trim();
     const confirmPassword = document.getElementById("confirmPassword").value.trim();
     const city = document.getElementById("city").value.trim();
+    const state = document.getElementById("state").value.trim();
     const favoriteNFL = document.getElementById("favoriteNFL").value.trim();
     const favoriteCollege = document.getElementById("favoriteCollege").value.trim();
 
@@ -13,6 +14,7 @@ createAccountBtn.addEventListener("click", () => {
         password === "" ||
         confirmPassword === "" ||
         city === "" ||
+        state === "" ||
         favoriteNFL === "" ||
         favoriteCollege === ""
     ) {
@@ -35,6 +37,7 @@ createAccountBtn.addEventListener("click", () => {
     const userData = {
         password: password,
         city: city,
+        state: state,
         favoriteNFL: favoriteNFL,
         favoriteCollege: favoriteCollege
     };
