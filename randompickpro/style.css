@@ -1,0 +1,83 @@
+/* RESET */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+/* BODY */
+body {
+    background: #0d0d0d;
+    color: white;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* CONTAINER */
+.container {
+    text-align: center;
+    width: 100%;
+    max-width: 400px;
+}
+
+/* HERO */
+.hero h1 {
+    font-size: 2.5rem;
+    margin-bottom: 10px;
+    color: #00ff9f;
+}
+
+.hero p {
+    color: #aaa;
+    margin-bottom: 30px;
+}
+
+/* CARD */
+.card {
+    background: rgba(255, 255, 255, 0.05);
+    padding: 30px;
+    border-radius: 16px;
+}
+
+/* INPUTS */
+.card input {
+    width: 100%;
+    padding: 12px;
+    margin: 10px 0;
+    border-radius: 10px;
+    border: none;
+    background: #1a1a1a;
+    color: white;
+}
+
+/* BUTTONS */
+.primary-btn {
+    width: 100%;
+    padding: 12px;
+    margin-top: 10px;
+    border-radius: 10px;
+    background: #00ff9f;
+    color: black;
+    font-weight: bold;
+    border: none;
+    cursor: pointer;
+}
+
+.secondary-btn {
+    width: 100%;
+    padding: 12px;
+    margin-top: 10px;
+    border-radius: 10px;
+    background: transparent;
+    border: 1px solid #00ff9f;
+    color: #00ff9f;
+    cursor: pointer;
+}
+
+.divider {
+    margin: 15px 0;
+    color: #777;
+}
