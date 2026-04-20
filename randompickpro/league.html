@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>League | RandomPick Pro</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="dashboard-page">
+        <nav class="top-nav">
+            <div class="logo">RandomPick Pro</div>
+            <div class="nav-links">
+                <a href="dashboard.html">Home</a>
+                <a href="create-league.html">Create League</a>
+                <a href="league-index.html">League Index</a>
+                <a href="#" id="logoutBtn">Logout</a>
+            </div>
+        </nav>
+
+        <main class="dashboard-container">
+            <section class="league-header">
+                <h1 id="leagueTitle">League Name</h1>
+                <p id="leagueMeta" class="dashboard-subtext"></p>
+            </section>
+
+            <section class="league-tabs">
+                <button class="tab-btn active" data-tab="chat">Chat</button>
+                <button class="tab-btn" data-tab="rules">League Rules</button>
+                <button class="tab-btn" data-tab="news">League News</button>
+                <button class="tab-btn" data-tab="schedule">Schedule Game</button>
+                <button class="tab-btn" data-tab="trade">Trade Talk</button>
+            </section>
+
+            <section class="league-content-card">
+                <div class="tab-panel active" id="chat">
+                    <h2>League Chat</h2>
+                    <div class="chat-box" id="chatBox">
+                        <p class="empty-text">No messages yet.</p>
+                    </div>
+                    <div class="chat-input-row">
+                        <input type="text" id="chatInput" placeholder="Type a message...">
+                        <button class="primary-btn small-btn" id="sendChatBtn">Send</button>
+                    </div>
+                </div>
+
+                <div class="tab-panel" id="rules">
+                    <h2>League Rules</h2>
+                    <p class="empty-text">No rules posted yet.</p>
+                </div>
+
+                <div class="tab-panel" id="news">
+                    <h2>League News</h2>
+                    <p class="empty-text">No league news yet.</p>
+                </div>
+
+                <div class="tab-panel" id="schedule">
+                    <h2>Schedule Game</h2>
+                    <p class="empty-text">Game scheduling tools coming next.</p>
+                </div>
+
+                <div class="tab-panel" id="trade">
+                    <h2>Trade Talk</h2>
+                    <p class="empty-text">No trade talk yet.</p>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="league.js"></script>
+</body>
+</html>

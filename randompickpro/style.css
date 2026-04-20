@@ -261,3 +261,96 @@ body {
     color: white;
     outline: none;
 }
+
+/* LEAGUE PAGE */
+.league-header {
+    margin-bottom: 24px;
+}
+
+.league-header h1 {
+    font-size: 2.4rem;
+    margin-bottom: 10px;
+}
+
+.league-tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 24px;
+}
+
+.tab-btn {
+    padding: 10px 18px;
+    border-radius: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    background: rgba(255, 255, 255, 0.04);
+    color: white;
+    cursor: pointer;
+    transition: 0.2s ease;
+}
+
+.tab-btn:hover,
+.tab-btn.active {
+    background: #00ff9f;
+    color: black;
+}
+
+.league-content-card {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 18px;
+    padding: 24px;
+    box-shadow: 0 0 20px rgba(0, 255, 159, 0.06);
+}
+
+.tab-panel {
+    display: none;
+}
+
+.tab-panel.active {
+    display: block;
+}
+
+.chat-box {
+    min-height: 260px;
+    max-height: 360px;
+    overflow-y: auto;
+    background: #111;
+    border-radius: 12px;
+    padding: 16px;
+    margin: 18px 0;
+}
+
+.chat-message {
+    padding: 10px 12px;
+    margin-bottom: 10px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 10px;
+    line-height: 1.5;
+}
+
+.chat-input-row {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+}
+
+.chat-input-row input {
+    flex: 1;
+    padding: 12px;
+    border-radius: 10px;
+    border: none;
+    background: #1a1a1a;
+    color: white;
+    outline: none;
+}
+
+.small-btn {
+    width: auto;
+    min-width: 100px;
+    margin-top: 0;
+}
+
+.empty-text {
+    color: #9d9d9d;
+}
