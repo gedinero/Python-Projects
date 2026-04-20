@@ -31,6 +31,7 @@
                 <button class="tab-btn" data-tab="news">League News</button>
                 <button class="tab-btn" data-tab="schedule">Schedule Game</button>
                 <button class="tab-btn" data-tab="trade">Trade Talk</button>
+                <button class="tab-btn" data-tab="draft">Draft</button>
             </section>
 
             <section class="league-content-card">
@@ -86,6 +87,53 @@
                     <div class="chat-input-row">
                         <input type="text" id="tradeInput" placeholder="Post trade talk...">
                         <button class="primary-btn small-btn" id="sendTradeBtn">Send</button>
+                    </div>
+                </div>
+
+                <div class="tab-panel" id="draft">
+    <h2>League Draft</h2>
+
+    <div class="draft-status-box">
+        <p><strong>Status:</strong> <span id="draftStatusText">Not started</span></p>
+    </div>
+
+    <div id="draftControls" class="draft-controls" style="display: none;">
+        <button class="primary-btn small-btn" id="startDraftBtn">Start Draft</button>
+        <button class="delete-league-btn" id="redraftBtn">Redraft</button>
+
+        <div class="draft-assignment-box">
+            <select id="draftUserSelect">
+                <option value="">Select User</option>
+            </select>
+
+            <select id="draftTeamSelect">
+                <option value="">Select Team</option>
+            </select>
+
+            <button class="primary-btn small-btn" id="assignTeamBtn">Assign Team</button>
+        </div>
+    </div>
+
+    <div class="draft-columns">
+        <div class="draft-list-card">
+            <h3>Available Teams</h3>
+            <div id="availableTeamsList" class="draft-list"></div>
+        </div>
+
+        <div class="draft-list-card">
+            <h3>Draft Results</h3>
+            <div id="draftResultsList" class="draft-list"></div>
+        </div>
+    </div>
+</div>
+
+                <!-- DRAFT -->
+                <div class="tab-panel" id="draft">
+                    <h2>Draft</h2>
+                    <div class="chat-box" id="draftBox"></div>
+                    <div class="chat-input-row">
+                        <input type="text" id="draftInput" placeholder="Post draft discussion...">
+                        <button class="primary-btn small-btn" id="sendDraftBtn">Send</button>
                     </div>
                 </div>
 
