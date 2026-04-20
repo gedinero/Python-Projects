@@ -1,33 +1,51 @@
-const welcomeMessage = document.getElementById("welcomeMessage");
-const logoutBtn = document.getElementById("logoutBtn");
-const profileCity = document.getElementById("profileCity");
-const profileState = document.getElementById("profileState");
-const profileNFL = document.getElementById("profileNFL");
-const profileCollege = document.getElementById("profileCollege");
+document.addEventListener("DOMContentLoaded", () => {
+    const welcomeMessage = document.getElementById("welcomeMessage");
+    const logoutBtn = document.getElementById("logoutBtn");
+    const myLeaguesContainer = document.getElementById("myLeaguesContainer");
 
-const currentUser = localStorage.getItem("currentUser");
+    const currentUser = localStorage.getItem("currentUser");
 
-if (!currentUser) {
-    window.location.href = "index.html";
-} else {
+    if (!currentUser) {
+        window.location.href = "index.html";
+        return;
+    }
+
     welcomeMessage.textContent = `Welcome back, ${currentUser}`;
 
-    const storedUser = localStorage.getItem(currentUser);
-
-    if (storedUser) {
-        const parsedUser = JSON.parse(storedUser);
-
-        profileCity.textContent = parsedUser.city || "-";
-        profileState.textContent = parsedUser.state || "-";
-        profileNFL.textContent = parsedUser.favoriteNFL || "-";
-        profileCollege.textContent = parsedUser.favoriteCollege || "-";
+    if (logoutBtn) {
+        logoutBtn.addEventListener("click", (event) => {
+            event.preventDefault();
+            localStorage.removeItem("currentUser");
+            window.location.href = "index.html";
+        });
     }
-}
 
-if (logoutBtn) {
-    logoutBtn.addEventListener("click", (event) => {
-        event.preventDefault();
-        localStorage.removeItem("currentUser");
-        window.location.href = "index.html";
+    const leagues = JSON.parse(localStorage.getItem("leagues")) || [];
+    const userLeagues = leagues.filter((league) => league.commissioner === currentUser);
+
+    if (!myLeaguesContainer) return;
+
+    if (userLeagues.length === 0) {
+        myLeaguesContainer.innerHTML = `<p class="empty-text">You haven’t created any leagues yet.</p>`;
+        return;
+    }
+
+    myLeaguesContainer.innerHTML = userLeagues.map((league) => `
+        <div class="league-preview-card">
+            <h3>${league.name}</h3>
+            <p>${league.game} • ${league.type}</p>
+            <p>Commissioner: ${league.commissioner}</p>
+            <button class="card-btn view-league-btn" data-id="${league.id}">View League</button>
+        </div>
+    `).join("");
+
+    const viewLeagueButtons = document.querySelectorAll(".view-league-btn");
+
+    viewLeagueButtons.forEach((button) => {
+        button.addEventListener("click", () => {
+            const leagueId = Number(button.dataset.id);
+            localStorage.setItem("selectedLeagueId", leagueId);
+            window.location.href = "league.html";
+        });
     });
-}
+});

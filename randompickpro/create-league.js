@@ -1,7 +1,6 @@
 document.addEventListener("DOMContentLoaded", () => {
     const logoutBtn = document.getElementById("logoutBtn");
     const createLeagueBtn = document.getElementById("createLeagueBtn");
-    const leagueMessage = document.getElementById("leagueMessage");
 
     const currentUser = localStorage.getItem("currentUser");
 
@@ -31,7 +30,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 leagueType === "" ||
                 isCommissioner === ""
             ) {
-                leagueMessage.textContent = "Fill in all league fields.";
+                alert("Fill in all league fields.");
                 return;
             }
 
@@ -55,16 +54,7 @@ document.addEventListener("DOMContentLoaded", () => {
             localStorage.setItem("leagues", JSON.stringify(leagues));
             localStorage.setItem("selectedLeagueId", newLeague.id);
 
-            leagueMessage.innerHTML = `
-                League created successfully.
-                <br>
-                <a href="league.html" class="view-league-link">View League</a>
-            `;
-
-            document.getElementById("leagueName").value = "";
-            document.getElementById("gameType").value = "";
-            document.getElementById("leagueType").value = "";
-            document.getElementById("isCommissioner").value = "";
+            window.location.href = "league.html";
         });
     }
 });

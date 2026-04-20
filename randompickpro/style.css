@@ -354,3 +354,88 @@ body {
 .empty-text {
     color: #9d9d9d;
 }
+
+/* CENTER CREATE LEAGUE PAGE */
+.dashboard-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+/* CENTER HERO TEXT */
+.dashboard-hero {
+    text-align: center;
+    max-width: 600px;
+}
+
+/* CENTER FORM CARD */
+.league-form-card {
+    width: 100%;
+    max-width: 500px;
+    text-align: center;
+}
+
+/* INPUT + SELECT ALIGNMENT */
+.league-form-card input,
+.league-form-card select {
+    text-align: center;
+}
+
+/* BUTTON CENTER */
+.primary-btn {
+    display: block;
+    margin: 16px auto 0 auto;
+}
+/* CLEAN SPACING + LAYOUT UPGRADE */
+
+/* HERO SPACING */
+.dashboard-hero {
+    margin-bottom: 32px;
+}
+
+.dashboard-hero h1 {
+    margin-bottom: 10px;
+}
+
+.dashboard-subtext {
+    margin-top: 6px;
+    line-height: 1.5;
+    color: #b5b5b5;
+}
+
+/* FORM CARD SPACING */
+.league-form-card {
+    padding: 28px 24px;
+    margin-top: 10px;
+}
+
+/* FORM TITLE */
+.league-form-card h2 {
+    margin-bottom: 20px;
+}
+
+/* INPUT + SELECT SPACING */
+.league-form-card input,
+.league-form-card select {
+    margin: 12px 0;
+    padding: 14px;
+    font-size: 0.95rem;
+}
+
+/* BUTTON SPACING */
+.primary-btn {
+    margin-top: 18px;
+    padding: 14px;
+    font-weight: 600;
+}
+
+/* MESSAGE SPACING */
+.league-message {
+    margin-top: 18px;
+}
+
+/* NAVBAR BREATHING ROOM */
+.top-nav {
+    margin-bottom: 30px;
+}
