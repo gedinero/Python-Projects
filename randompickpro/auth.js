@@ -1,6 +1,6 @@
-const loginBtn = document.querySelector(".primary-btn");
-const usernameInput = document.querySelector('input[type="text"]');
-const passwordInput = document.querySelector('input[type="password"]');
+const loginBtn = document.getElementById("loginBtn");
+const usernameInput = document.getElementById("loginUsername");
+const passwordInput = document.getElementById("loginPassword");
 
 if (loginBtn) {
     loginBtn.addEventListener("click", () => {
@@ -14,14 +14,14 @@ if (loginBtn) {
 
         const storedUser = localStorage.getItem(username);
 
-if (storedUser === null) {
-    alert("User not found");
-    return;
-}
+        if (storedUser === null) {
+            alert("User not found");
+            return;
+        }
 
-const parsedUser = JSON.parse(storedUser);
+        const parsedUser = JSON.parse(storedUser);
 
-if (parsedUser.password === password) {
+        if (parsedUser.password === password) {
             localStorage.setItem("currentUser", username);
             alert("Login successful!");
             window.location.href = "dashboard.html";
