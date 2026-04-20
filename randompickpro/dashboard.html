@@ -4,13 +4,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard | RandomPick Pro</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
     <div class="dashboard-page">
+
         <nav class="top-nav">
             <div class="logo">RandomPick Pro</div>
+
             <div class="nav-links">
                 <a href="dashboard.html">Home</a>
                 <a href="create-league.html">Create League</a>
@@ -19,42 +22,52 @@
             </div>
         </nav>
 
-       <main class="dashboard-container">
-    <section class="dashboard-hero">
-        <p class="eyebrow">Dashboard</p>
-        <h1 id="welcomeMessage">Welcome back</h1>
-        <p class="dashboard-subtext">
-            Build leagues, manage matchups, and keep everything moving without the chaos.
-        </p>
-    </section>
+        <main class="dashboard-container">
 
-    <section class="dashboard-grid">
-        <div class="dashboard-card">
-            <h2>Create a League</h2>
-            <p>Start a new league and begin building your community.</p>
-            <a class="card-btn" href="create-league.html">Create League</a>
-        </div>
+            <section class="dashboard-hero">
+                <p class="eyebrow">Dashboard</p>
+                <h1 id="welcomeMessage">Welcome back</h1>
+                <p class="dashboard-subtext">
+                    Build leagues, manage matchups, and keep everything moving without the chaos.
+                </p>
+            </section>
 
-        <div class="dashboard-card">
-            <h2>League Index</h2>
-            <p>Search and explore leagues that have already been created.</p>
-            <a class="card-btn" href="league-index.html">Browse Leagues</a>
-        </div>
+            <section class="profile-card">
+                <div class="profile-header">
+                    <h2>Your Profile</h2>
+                    <button id="editProfileBtn" class="edit-profile-btn">Edit</button>
+                </div>
 
-        <div class="dashboard-card">
-            <h2>Profile</h2>
-            <p>Your account info and activity will keep growing here.</p>
-            <a class="card-btn disabled-btn" href="#">Coming Soon</a>
-        </div>
-    </section>
+                <p><strong>City:</strong> <span id="profileCity"></span></p>
+                <p><strong>State:</strong> <span id="profileState"></span></p>
+                <p><strong>Country:</strong> <span id="profileCountry"></span></p>
+                <p><strong>Favorite NFL Team:</strong> <span id="profileNFL"></span></p>
+                <p><strong>Favorite College Team:</strong> <span id="profileCollege"></span></p>
+            </section>
 
-    <section class="my-leagues-section">
-        <h2>My Leagues</h2>
-        <div id="myLeaguesContainer" class="my-leagues-grid">
-            <p class="empty-text">You haven’t created any leagues yet.</p>
-        </div>
-    </section>
-</main> 
+            <section class="dashboard-grid">
+                <div class="dashboard-card">
+                    <h2>Create a League</h2>
+                    <p>Start a new league and begin building your community.</p>
+                    <a class="card-btn" href="create-league.html">Create League</a>
+                </div>
+
+                <div class="dashboard-card">
+                    <h2>League Index</h2>
+                    <p>Search and explore leagues that have already been created.</p>
+                    <a class="card-btn" href="league-index.html">Browse Leagues</a>
+                </div>
+            </section>
+
+            <section class="my-leagues-section">
+                <h2>My Leagues</h2>
+                <div id="myLeaguesContainer" class="my-leagues-grid">
+                    <p class="empty-text">You haven’t created any leagues yet.</p>
+                </div>
+            </section>
+
+        </main>
+
     </div>
 
     <script src="dashboard.js"></script>

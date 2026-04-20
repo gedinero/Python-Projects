@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>League | RandomPick Pro</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -33,36 +34,61 @@
             </section>
 
             <section class="league-content-card">
+
+                <!-- GENERAL CHAT -->
                 <div class="tab-panel active" id="chat">
                     <h2>League Chat</h2>
-                    <div class="chat-box" id="chatBox">
-                        <p class="empty-text">No messages yet.</p>
-                    </div>
+                    <div class="chat-box" id="chatBox"></div>
                     <div class="chat-input-row">
-                        <input type="text" id="chatInput" placeholder="Type a message...">
+                        <input type="text" id="chatInput" placeholder="Send a message...">
                         <button class="primary-btn small-btn" id="sendChatBtn">Send</button>
                     </div>
                 </div>
 
+                <!-- RULES -->
                 <div class="tab-panel" id="rules">
                     <h2>League Rules</h2>
-                    <p class="empty-text">No rules posted yet.</p>
+
+                    <div id="rulesDisplay" class="info-box"></div>
+
+                    <div id="rulesEditor" class="editor-box" style="display: none;">
+                        <textarea id="rulesInput" placeholder="Write league rules here..."></textarea>
+                        <button class="primary-btn small-btn" id="saveRulesBtn">Save Rules</button>
+                    </div>
                 </div>
 
+                <!-- NEWS -->
                 <div class="tab-panel" id="news">
                     <h2>League News</h2>
-                    <p class="empty-text">No league news yet.</p>
+
+                    <div id="newsDisplay" class="info-box"></div>
+
+                    <div id="newsEditor" class="editor-box" style="display: none;">
+                        <textarea id="newsInput" placeholder="Post league news here..."></textarea>
+                        <button class="primary-btn small-btn" id="saveNewsBtn">Save News</button>
+                    </div>
                 </div>
 
+                <!-- SCHEDULE CHAT -->
                 <div class="tab-panel" id="schedule">
                     <h2>Schedule Game</h2>
-                    <p class="empty-text">Game scheduling tools coming next.</p>
+                    <div class="chat-box" id="scheduleBox"></div>
+                    <div class="chat-input-row">
+                        <input type="text" id="scheduleInput" placeholder="Post scheduling message...">
+                        <button class="primary-btn small-btn" id="sendScheduleBtn">Send</button>
+                    </div>
                 </div>
 
+                <!-- TRADE CHAT -->
                 <div class="tab-panel" id="trade">
                     <h2>Trade Talk</h2>
-                    <p class="empty-text">No trade talk yet.</p>
+                    <div class="chat-box" id="tradeBox"></div>
+                    <div class="chat-input-row">
+                        <input type="text" id="tradeInput" placeholder="Post trade talk...">
+                        <button class="primary-btn small-btn" id="sendTradeBtn">Send</button>
+                    </div>
                 </div>
+
             </section>
         </main>
     </div>

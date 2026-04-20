@@ -501,3 +501,243 @@ body {
     background: #ff4d4d;
     color: white;
 }
+
+/* LEAGUE INDEX */
+.league-index-card {
+    width: 100%;
+    max-width: 900px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 18px;
+    padding: 24px;
+    box-shadow: 0 0 20px rgba(0, 255, 159, 0.06);
+}
+
+#leagueSearchInput {
+    width: 100%;
+    padding: 14px;
+    margin-bottom: 22px;
+    border-radius: 12px;
+    border: none;
+    background: #1a1a1a;
+    color: white;
+    outline: none;
+    text-align: center;
+    font-size: 1rem;
+}
+
+#leagueSearchInput:focus {
+    box-shadow: 0 0 0 2px rgba(0, 255, 159, 0.3);
+}
+
+.profile-card {
+    width: 100%;
+    max-width: 1100px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 18px;
+    padding: 24px;
+    box-shadow: 0 0 20px rgba(0, 255, 159, 0.06);
+    margin-bottom: 28px;
+}
+
+.profile-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 14px;
+}
+
+.profile-card h2 {
+    margin: 0;
+}
+
+.profile-card p {
+    margin: 8px 0;
+    color: #d6d6d6;
+    line-height: 1.5;
+}
+
+.edit-profile-btn {
+    padding: 6px 12px;
+    border-radius: 8px;
+    border: 1px solid #00ff9f;
+    background: transparent;
+    color: #00ff9f;
+    cursor: pointer;
+    font-size: 0.85rem;
+    transition: 0.2s ease;
+}
+
+.edit-profile-btn:hover {
+    background: #00ff9f;
+    color: black;
+}
+
+.my-leagues-section {
+    width: 100%;
+    max-width: 1100px;
+    margin-top: 40px;
+}
+
+.my-leagues-section h2 {
+    margin-bottom: 18px;
+    text-align: center;
+}
+
+.my-leagues-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 20px;
+}
+
+.league-preview-card {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 18px;
+    padding: 22px;
+    box-shadow: 0 0 20px rgba(0, 255, 159, 0.06);
+    text-align: center;
+}
+
+.league-preview-card h3 {
+    margin-bottom: 10px;
+    font-size: 1.2rem;
+}
+
+.league-preview-card p {
+    color: #bdbdbd;
+    margin-bottom: 8px;
+    line-height: 1.5;
+}
+
+.league-card-actions {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    margin-top: 16px;
+    flex-wrap: wrap;
+}
+
+.delete-league-btn {
+    padding: 12px 18px;
+    border-radius: 10px;
+    border: 1px solid #ff4d4d;
+    background: transparent;
+    color: #ff4d4d;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.2s ease;
+}
+
+.delete-league-btn:hover {
+    background: #ff4d4d;
+    color: white;
+}
+
+/* INFO / EDITOR BOXES */
+.info-box {
+    min-height: 120px;
+    background: #111;
+    border-radius: 12px;
+    padding: 18px;
+    margin: 18px 0;
+}
+
+.editor-box {
+    margin-top: 16px;
+}
+
+.editor-box textarea {
+    width: 100%;
+    min-height: 140px;
+    padding: 14px;
+    border-radius: 12px;
+    border: none;
+    background: #1a1a1a;
+    color: white;
+    outline: none;
+    resize: vertical;
+    margin-bottom: 12px;
+    font-family: inherit;
+}
+
+.formatted-text {
+    line-height: 1.7;
+    color: #e4e4e4;
+}
+
+/* MESSENGER STYLE CHAT */
+.chat-box {
+    min-height: 320px;
+    max-height: 420px;
+    overflow-y: auto;
+    background: #111;
+    border-radius: 14px;
+    padding: 18px;
+    margin: 18px 0;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.messenger-row {
+    display: flex;
+    justify-content: flex-start;
+}
+
+.messenger-row.own-message {
+    justify-content: flex-end;
+}
+
+.messenger-bubble {
+    max-width: 75%;
+    background: rgba(255, 255, 255, 0.06);
+    padding: 12px 14px;
+    border-radius: 16px;
+    line-height: 1.5;
+}
+
+.own-message .messenger-bubble {
+    background: #00ff9f;
+    color: black;
+}
+
+.messenger-user {
+    font-size: 0.8rem;
+    font-weight: 700;
+    margin-bottom: 4px;
+}
+
+.messenger-text {
+    font-size: 0.95rem;
+    word-wrap: break-word;
+}
+
+.messenger-time {
+    font-size: 0.72rem;
+    opacity: 0.75;
+    margin-top: 6px;
+}
+
+.chat-input-row {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+}
+
+.chat-input-row input {
+    flex: 1;
+    padding: 14px;
+    border-radius: 12px;
+    border: none;
+    background: #1a1a1a;
+    color: white;
+    outline: none;
+}
+
+.small-btn {
+    width: auto;
+    min-width: 110px;
+    margin-top: 0;
+}

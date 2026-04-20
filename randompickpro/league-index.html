@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>League Index | RandomPick Pro</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div class="dashboard-page">
+
+        <nav class="top-nav">
+            <div class="logo">RandomPick Pro</div>
+
+            <div class="nav-links">
+                <a href="dashboard.html">Home</a>
+                <a href="create-league.html">Create League</a>
+                <a href="league-index.html" class="active">League Index</a>
+                <a href="#" id="logoutBtn">Logout</a>
+            </div>
+        </nav>
+
+        <main class="dashboard-container">
+            <section class="dashboard-hero">
+                <p class="eyebrow">League Directory</p>
+                <h1>League Index</h1>
+                <p class="dashboard-subtext">
+                    Search and browse leagues that are already on the app.
+                </p>
+            </section>
+
+            <section class="league-index-card">
+                <input
+                    type="text"
+                    id="leagueSearchInput"
+                    placeholder="Search leagues by name..."
+                >
+
+                <div id="leagueResults" class="my-leagues-grid">
+                    <p class="empty-text">No leagues found.</p>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="league-index.js"></script>
+</body>
+</html>

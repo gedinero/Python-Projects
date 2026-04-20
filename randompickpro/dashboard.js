@@ -3,6 +3,13 @@ document.addEventListener("DOMContentLoaded", () => {
     const logoutBtn = document.getElementById("logoutBtn");
     const myLeaguesContainer = document.getElementById("myLeaguesContainer");
 
+    const profileCity = document.getElementById("profileCity");
+    const profileState = document.getElementById("profileState");
+    const profileCountry = document.getElementById("profileCountry");
+    const profileNFL = document.getElementById("profileNFL");
+    const profileCollege = document.getElementById("profileCollege");
+    const editProfileBtn = document.getElementById("editProfileBtn");
+
     const currentUser = localStorage.getItem("currentUser");
 
     if (!currentUser) {
@@ -11,6 +18,24 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     welcomeMessage.textContent = `Welcome back, ${currentUser}`;
+
+    const storedUser = localStorage.getItem(currentUser);
+
+    if (storedUser) {
+        const userData = JSON.parse(storedUser);
+
+        if (profileCity) profileCity.textContent = userData.city || "";
+        if (profileState) profileState.textContent = userData.state || "";
+        if (profileCountry) profileCountry.textContent = userData.country || "";
+        if (profileNFL) profileNFL.textContent = userData.favoriteNFL || "";
+        if (profileCollege) profileCollege.textContent = userData.favoriteCollege || "";
+    }
+
+    if (editProfileBtn) {
+        editProfileBtn.addEventListener("click", () => {
+            window.location.href = "create-account.html";
+        });
+    }
 
     if (logoutBtn) {
         logoutBtn.addEventListener("click", (event) => {
@@ -62,6 +87,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 const confirmed = confirm("Are you sure you want to delete this league?");
                 if (!confirmed) return;
 
+                const leagues = JSON.parse(localStorage.getItem("leagues")) || [];
                 const updatedLeagues = leagues.filter((league) => league.id !== leagueId);
                 localStorage.setItem("leagues", JSON.stringify(updatedLeagues));
 
