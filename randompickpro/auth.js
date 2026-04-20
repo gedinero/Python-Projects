@@ -36,9 +36,10 @@ loginBtn.addEventListener("click", () => {
     }
 
     if (storedPassword === password) {
-        alert("Login successful!");
-        window.location.href = "dashboard.html";
-    } else {
+    localStorage.setItem("currentUser", username);
+    alert("Login successful!");
+    window.location.href = "dashboard.html";
+} else {
         alert("Incorrect password");
     }
 });
