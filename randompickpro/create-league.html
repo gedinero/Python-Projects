@@ -1,28 +1,97 @@
-<section class="league-form-card">
-    <h2>League Details</h2>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create League | RandomPick Pro</title>
 
-    <input type="text" id="leagueName" placeholder="League Name">
+    <!-- Google Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
 
-    <select id="gameType">
-        <option value="">Select Game</option>
-        <option value="Madden 26">Madden 26</option>
-        <option value="College Football 26">College Football 26</option>
-    </select>
+    <!-- Your CSS -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
 
-    <select id="leagueType">
-        <option value="">Select League Type</option>
-        <option value="Casual">Casual</option>
-        <option value="Competitive">Competitive</option>
-        <option value="Money League">Money League</option>
-    </select>
+    <div class="dashboard-page">
 
-    <select id="isCommissioner">
-        <option value="">Are you a commissioner?</option>
-        <option value="Yes">Yes</option>
-        <option value="No">No</option>
-    </select>
+        <!-- NAVBAR -->
+        <nav class="top-nav">
+            <div class="logo">RandomPick Pro</div>
 
-    <button class="primary-btn" id="createLeagueBtn">Create League</button>
+            <div class="nav-links">
+                <a href="dashboard.html">Home</a>
+                <a href="create-league.html" class="active">Create League</a>
+                <a href="league-index.html">League Index</a>
+                <a href="#" id="logoutBtn">Logout</a>
+            </div>
+        </nav>
 
-    <p id="leagueMessage" class="league-message"></p>
-</section>
+        <!-- MAIN CONTENT -->
+        <main class="dashboard-container">
+
+            <!-- HERO -->
+            <section class="dashboard-hero">
+                <p class="eyebrow">League Setup</p>
+                <h1>Create a League</h1>
+                <p class="dashboard-subtext">
+                    Build your league and start running games without the chaos.
+                </p>
+            </section>
+
+            <!-- FORM CARD -->
+            <section class="league-form-card">
+
+                <h2>League Details</h2>
+
+                <!-- League Name -->
+                <input 
+                    type="text" 
+                    id="leagueName" 
+                    placeholder="League Name"
+                >
+
+                <!-- Game Type -->
+                <select id="gameType">
+                    <option value="">Select Game</option>
+                    <option value="Madden 26">Madden 26</option>
+                    <option value="College Football 26">College Football 26</option>
+                </select>
+
+                <!-- League Type -->
+                <select id="leagueType">
+                    <option value="">Select League Type</option>
+                    <option value="Casual">Casual</option>
+                    <option value="Competitive">Competitive</option>
+                    <option value="Money League">Money League</option>
+                </select>
+
+                <!-- Commissioner -->
+                <select id="isCommissioner">
+                    <option value="">Are you a commissioner?</option>
+                    <option value="Yes">Yes</option>
+                    <option value="No">No</option>
+                </select>
+
+                <!-- Button -->
+                <button 
+                    class="primary-btn" 
+                    id="createLeagueBtn"
+                >
+                    Create League
+                </button>
+
+                <!-- Message -->
+                <p id="leagueMessage" class="league-message"></p>
+
+            </section>
+
+        </main>
+
+    </div>
+
+    <!-- JS -->
+    <script src="create-league.js"></script>
+
+</body>
+</html>
