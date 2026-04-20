@@ -1,24 +1,38 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>RandomPick Pro</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RandomPick Pro</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-  <h1>RandomPick Pro</h1>
+    <div class="container">
 
-  <input id="leagueName" placeholder="Enter League Name">
-  <button onclick="createLeague()">Create League</button>
+        <!-- HERO -->
+        <div class="hero">
+            <h1>RandomPick Pro</h1>
+            <p>Run leagues without the chaos.</p>
+        </div>
 
-  <h2>Leagues</h2>
-  <div id="leagueList"></div>
+        <!-- LOGIN CARD -->
+        <div class="card">
+            <h2>Welcome Back</h2>
 
-  <!-- Firebase -->
-  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
+            <input type="text" placeholder="Email or Username">
+            <input type="password" placeholder="Password">
 
-  <!-- Your Script -->
-  <script src="script.js"></script>
+            <button class="primary-btn">Login</button>
+
+            <p class="divider">or</p>
+
+            <button class="secondary-btn">Create Account</button>
+        </div>
+
+    </div>
+
+<script src="script.js"></script>
 
 </body>
 </html>
