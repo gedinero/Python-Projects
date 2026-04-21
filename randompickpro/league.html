@@ -1,285 +1,261 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>League | Commish Central</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-    <div class="dashboard-page">
-        <nav class="top-nav">
-    <div class="top-nav-inner">
-        <div class="logo">Commish Central</div>
-        <div class="nav-links">
+    <header class="topbar">
+        <div class="brand">Commish Central</div>
+        <nav class="topnav">
             <a href="dashboard.html">Home</a>
             <a href="create-league.html">Create League</a>
             <a href="league-index.html">League Index</a>
             <a href="#" id="logoutBtn">Logout</a>
-        </div>
-    </div>
-</nav>
+        </nav>
+    </header>
 
-        <main class="dashboard-container">
-            <section class="league-header">
-                <h1 id="leagueTitle">League Name</h1>
-                <p id="leagueMeta" class="dashboard-subtext"></p>
-                <p id="myLeagueInfo" class="league-user-line">You: -- • Team: No team assigned</p>
-            </section>
+    <main class="league-page">
+        <section class="league-header">
+            <h1 id="leagueTitle">League Name</h1>
+            <p id="leagueMeta">Game • Type • Commissioner</p>
+            <p id="myLeagueInfo">You: -- • Team: No team assigned</p>
+        </section>
 
-            <section class="league-tabs">
-                <button class="tab-btn active" data-tab="chat">Chat</button>
-                <button class="tab-btn" data-tab="rules">League Rules</button>
-                <button class="tab-btn" data-tab="news">League News</button>
-                <button class="tab-btn" data-tab="schedule">Schedule Game</button>
-                <button class="tab-btn" data-tab="trade">Trade Talk</button>
-                <button class="tab-btn" data-tab="draft">Draft</button>
-                <button class="tab-btn" data-tab="draft-summary">Draft Summary</button>
-                <button class="tab-btn" data-tab="settings">League Settings</button>
-            </section>
+        <section class="league-tabs">
+            <button class="tab-btn active" data-tab="chat">Chat</button>
+            <button class="tab-btn" data-tab="rules">League Rules</button>
+            <button class="tab-btn" data-tab="news">League News</button>
+            <button class="tab-btn" data-tab="schedule">Schedule Game</button>
+            <button class="tab-btn" data-tab="trade">Trade Talk</button>
+            <button class="tab-btn" data-tab="draft">Draft</button>
+            <button class="tab-btn" data-tab="draftSummary">Draft Summary</button>
+            <button class="tab-btn" data-tab="settings">League Settings</button>
+        </section>
 
-            <section class="league-content-card">
+        <section class="league-panel-shell">
+            <!-- CHAT -->
+            <div class="tab-panel active" id="chat">
+                <h2>League Chat</h2>
 
-                <div class="tab-panel active" id="chat">
-    <h2>League Chat</h2>
-
-    <div class="chat-box messenger-chat-box" id="chatBox"></div>
-
-    <div class="typing-indicator-row" id="typingIndicatorRow" style="display: none;">
-        <div class="typing-bubble">
-            <span></span>
-            <span></span>
-            <span></span>
-        </div>
-        <span class="typing-text" id="typingText">Typing...</span>
-    </div>
-
-    <div class="chat-toolbar">
-        <button type="button" class="chat-tool-btn emoji-toggle-btn" id="chatEmojiToggleBtn">😀 Emoji</button>
-        <label for="chatImageInput" class="chat-tool-btn">📷 Photo</label>
-        <input type="file" id="chatImageInput" accept="image/*" hidden>
-
-        <button type="button" class="chat-tool-btn" id="gifToggleBtn">GIF</button>
-    </div>
-
-    <div class="emoji-picker-wrap" id="chatEmojiPickerWrap" style="display: none;">
-        <div class="emoji-grid" id="chatEmojiGrid"></div>
-    </div>
-
-    <div class="gif-input-wrap" id="gifInputWrap" style="display: none;">
-        <input type="text" id="gifUrlInput" placeholder="Paste GIF URL here...">
-        <button class="primary-btn small-btn" id="sendGifBtn">Send GIF</button>
-    </div>
-
-    <div class="chat-input-row messenger-input-row">
-        <input type="text" id="chatInput" placeholder="Send a message...">
-        <button class="primary-btn small-btn" id="sendChatBtn">Send</button>
-    </div>
-</div>
-
-                <div class="tab-panel" id="rules">
-                    <h2>League Rules</h2>
-                    <div id="rulesDisplay" class="info-box"></div>
-
-                    <div id="rulesEditor" class="editor-box" style="display: none;">
-                        <textarea id="rulesInput" placeholder="Write league rules here..."></textarea>
-                        <button class="primary-btn small-btn" id="saveRulesBtn">Save Rules</button>
-                    </div>
+                <div class="chat-box messenger-chat-box" id="chatBox">
+                    <p class="empty-text">No messages yet.</p>
                 </div>
 
-                <div class="tab-panel" id="news">
-                    <h2>League News</h2>
-                    <div id="newsDisplay" class="info-box"></div>
-
-                    <div id="newsEditor" class="editor-box" style="display: none;">
-                        <textarea id="newsInput" placeholder="Post league news here..."></textarea>
-                        <button class="primary-btn small-btn" id="saveNewsBtn">Save News</button>
-                    </div>
+                <div class="chat-toolbar unified-toolbar">
+                    <button type="button" class="chat-tool-btn" id="chatEmojiToggleBtn">😊 Emoji</button>
+                    <label for="chatImageInput" class="chat-tool-btn">🖼 Photo</label>
+                    <input type="file" id="chatImageInput" accept="image/*" hidden />
+                    <button type="button" class="chat-tool-btn" id="gifToggleBtn">GIF</button>
                 </div>
 
-                <div class="tab-panel" id="schedule">
-    <h2>Schedule Game</h2>
-
-    <div class="chat-box messenger-chat-box" id="scheduleBox"></div>
-
-    <div class="typing-indicator-row" id="scheduleTypingIndicatorRow" style="display: none;">
-        <div class="typing-bubble">
-            <span></span>
-            <span></span>
-            <span></span>
-        </div>
-        <span class="typing-text" id="scheduleTypingText">Typing...</span>
-    </div>
-
-    <div class="chat-toolbar">
-        <button type="button" class="chat-tool-btn emoji-toggle-btn" id="scheduleEmojiToggleBtn">😀 Emoji</button>
-        <label for="scheduleImageInput" class="chat-tool-btn">📷 Photo</label>
-        <input type="file" id="scheduleImageInput" accept="image/*" hidden>
-
-        <button type="button" class="chat-tool-btn" id="scheduleGifToggleBtn">GIF</button>
-    </div>
-
-    <div class="emoji-picker-wrap" id="scheduleEmojiPickerWrap" style="display: none;">
-        <div class="emoji-grid" id="scheduleEmojiGrid"></div>
-    </div>
-
-    <div class="gif-input-wrap" id="scheduleGifInputWrap" style="display: none;">
-        <input type="text" id="scheduleGifUrlInput" placeholder="Paste GIF URL here...">
-        <button class="primary-btn small-btn" id="sendScheduleGifBtn">Send GIF</button>
-    </div>
-
-    <div class="chat-input-row messenger-input-row">
-        <input type="text" id="scheduleInput" placeholder="Post scheduling message...">
-        <button class="primary-btn small-btn" id="sendScheduleBtn">Send</button>
-    </div>
-</div>
-
-                <div class="tab-panel" id="trade">
-    <h2>Trade Talk</h2>
-
-    <div class="chat-box messenger-chat-box" id="tradeBox"></div>
-
-    <div class="typing-indicator-row" id="tradeTypingIndicatorRow" style="display: none;">
-        <div class="typing-bubble">
-            <span></span>
-            <span></span>
-            <span></span>
-        </div>
-        <span class="typing-text" id="tradeTypingText">Typing...</span>
-    </div>
-
-    <div class="chat-toolbar">
-        <button type="button" class="chat-tool-btn emoji-toggle-btn" id="tradeEmojiToggleBtn">😀 Emoji</button>
-        <label for="tradeImageInput" class="chat-tool-btn">📷 Photo</label>
-        <input type="file" id="tradeImageInput" accept="image/*" hidden>
-
-        <button type="button" class="chat-tool-btn" id="tradeGifToggleBtn">GIF</button>
-    </div>
-
-    <div class="emoji-picker-wrap" id="tradeEmojiPickerWrap" style="display: none;">
-        <div class="emoji-grid" id="tradeEmojiGrid"></div>
-    </div>
-
-    <div class="gif-input-wrap" id="tradeGifInputWrap" style="display: none;">
-        <input type="text" id="tradeGifUrlInput" placeholder="Paste GIF URL here...">
-        <button class="primary-btn small-btn" id="sendTradeGifBtn">Send GIF</button>
-    </div>
-
-    <div class="chat-input-row messenger-input-row">
-        <input type="text" id="tradeInput" placeholder="Post trade talk...">
-        <button class="primary-btn small-btn" id="sendTradeBtn">Send</button>
-    </div>
-</div>
-
-                <div class="tab-panel" id="draft">
-                    <h2>League Draft Board</h2>
-
-                    <div class="draft-top-bar">
-                        <div class="draft-status-box">
-                            <p><strong>Status:</strong> <span id="draftStatusText">Not started</span></p>
-                            <p><strong>Current Pick:</strong> <span id="currentPickText">None</span></p>
-                            <p><strong>Selected User:</strong> <span id="selectedDraftUserText">None</span></p>
-                        </div>
-
-                        <div id="draftControls" class="draft-controls" style="display: none;">
-                            <button class="primary-btn small-btn" id="randomizeOrderBtn">Randomize Order</button>
-                            <button class="primary-btn small-btn" id="resetDraftBtn">Reset Draft</button>
-                            <button class="delete-league-btn" id="clearSelectedUserBtn">Clear Selection</button>
-                        </div>
-                    </div>
-
-                    <div class="draft-board">
-                        <div class="draft-board-column">
-                            <h3>Players</h3>
-                            <div id="playersList" class="draft-list"></div>
-                        </div>
-
-                        <div class="draft-board-column">
-                            <h3>Draft Order</h3>
-                            <div id="draftOrderList" class="draft-list"></div>
-                        </div>
-
-                        <div class="draft-board-column">
-                            <h3>User Teams</h3>
-                            <div id="userTeamsList" class="draft-list"></div>
-                        </div>
-
-                        <div class="draft-board-column">
-                            <h3>CPU Teams</h3>
-                            <div id="cpuTeamsList" class="draft-list"></div>
-                        </div>
-                    </div>
-
-                    <div class="draft-help-text">
-                        Click a user in <strong>Draft Order</strong> or <strong>User Teams</strong>, then click a team in <strong>CPU Teams</strong>.
-                    </div>
+                <div class="emoji-picker-wrap" id="chatEmojiPickerWrap" style="display:none;">
+                    <div class="emoji-grid" id="chatEmojiGrid"></div>
                 </div>
 
-                <div class="tab-panel" id="draft-summary">
-                    <h2>Draft Summary</h2>
+                <div class="gif-picker-wrap" id="gifPickerWrap" style="display:none;">
+                    <div class="gif-search-row">
+                        <input type="text" id="gifSearchInput" placeholder="Search GIFs..." />
+                        <button type="button" class="primary-btn small-btn" id="gifSearchBtn">Search</button>
+                    </div>
+                    <div class="gif-results-grid" id="gifResultsGrid"></div>
+                    <p class="gif-powered-by">Powered by GIPHY</p>
+                </div>
 
-                    <div class="draft-summary-grid">
-                        <div class="draft-board-column">
-                            <h3>User Teams</h3>
-                            <div id="draftSummaryUserTeams" class="draft-list"></div>
+                <div class="chat-input-row messenger-input-row">
+                    <input type="text" id="chatInput" placeholder="Send a message..." />
+                    <button type="button" class="primary-btn small-btn" id="sendChatBtn">Send</button>
+                </div>
+            </div>
+
+            <!-- RULES -->
+            <div class="tab-panel" id="rules">
+                <h2>League Rules</h2>
+                <div class="content-card" id="rulesDisplay">
+                    <p class="empty-text">No rules posted yet.</p>
+                </div>
+                <div class="editor-wrap" id="rulesEditor" style="display:none;">
+                    <textarea id="rulesInput" placeholder="Post your league rules here..."></textarea>
+                    <button type="button" class="primary-btn" id="saveRulesBtn">Save Rules</button>
+                </div>
+            </div>
+
+            <!-- NEWS -->
+            <div class="tab-panel" id="news">
+                <h2>League News</h2>
+                <div class="content-card" id="newsDisplay">
+                    <p class="empty-text">No league news yet.</p>
+                </div>
+                <div class="editor-wrap" id="newsEditor" style="display:none;">
+                    <textarea id="newsInput" placeholder="Post league updates here..."></textarea>
+                    <button type="button" class="primary-btn" id="saveNewsBtn">Save News</button>
+                </div>
+            </div>
+
+            <!-- SCHEDULE -->
+            <div class="tab-panel" id="schedule">
+                <h2>Schedule Game</h2>
+
+                <div class="chat-box messenger-chat-box" id="scheduleBox">
+                    <p class="empty-text">No messages yet.</p>
+                </div>
+
+                <div class="chat-toolbar unified-toolbar">
+                    <button type="button" class="chat-tool-btn" id="scheduleEmojiToggleBtn">😊 Emoji</button>
+                    <label for="scheduleImageInput" class="chat-tool-btn">🖼 Photo</label>
+                    <input type="file" id="scheduleImageInput" accept="image/*" hidden />
+                    <button type="button" class="chat-tool-btn" id="scheduleGifToggleBtn">GIF</button>
+                </div>
+
+                <div class="emoji-picker-wrap" id="scheduleEmojiPickerWrap" style="display:none;">
+                    <div class="emoji-grid" id="scheduleEmojiGrid"></div>
+                </div>
+
+                <div class="gif-picker-wrap" id="scheduleGifPickerWrap" style="display:none;">
+                    <div class="gif-search-row">
+                        <input type="text" id="scheduleGifSearchInput" placeholder="Search GIFs..." />
+                        <button type="button" class="primary-btn small-btn" id="scheduleGifSearchBtn">Search</button>
+                    </div>
+                    <div class="gif-results-grid" id="scheduleGifResultsGrid"></div>
+                    <p class="gif-powered-by">Powered by GIPHY</p>
+                </div>
+
+                <div class="chat-input-row messenger-input-row">
+                    <input type="text" id="scheduleInput" placeholder="Post scheduling message..." />
+                    <button type="button" class="primary-btn small-btn" id="sendScheduleBtn">Send</button>
+                </div>
+            </div>
+
+            <!-- TRADE -->
+            <div class="tab-panel" id="trade">
+                <h2>Trade Talk</h2>
+
+                <div class="chat-box messenger-chat-box" id="tradeBox">
+                    <p class="empty-text">No messages yet.</p>
+                </div>
+
+                <div class="chat-toolbar unified-toolbar">
+                    <button type="button" class="chat-tool-btn" id="tradeEmojiToggleBtn">😊 Emoji</button>
+                    <label for="tradeImageInput" class="chat-tool-btn">🖼 Photo</label>
+                    <input type="file" id="tradeImageInput" accept="image/*" hidden />
+                    <button type="button" class="chat-tool-btn" id="tradeGifToggleBtn">GIF</button>
+                </div>
+
+                <div class="emoji-picker-wrap" id="tradeEmojiPickerWrap" style="display:none;">
+                    <div class="emoji-grid" id="tradeEmojiGrid"></div>
+                </div>
+
+                <div class="gif-picker-wrap" id="tradeGifPickerWrap" style="display:none;">
+                    <div class="gif-search-row">
+                        <input type="text" id="tradeGifSearchInput" placeholder="Search GIFs..." />
+                        <button type="button" class="primary-btn small-btn" id="tradeGifSearchBtn">Search</button>
+                    </div>
+                    <div class="gif-results-grid" id="tradeGifResultsGrid"></div>
+                    <p class="gif-powered-by">Powered by GIPHY</p>
+                </div>
+
+                <div class="chat-input-row messenger-input-row">
+                    <input type="text" id="tradeInput" placeholder="Post trade talk..." />
+                    <button type="button" class="primary-btn small-btn" id="sendTradeBtn">Send</button>
+                </div>
+            </div>
+
+            <!-- DRAFT -->
+            <div class="tab-panel" id="draft">
+                <h2>League Draft Board</h2>
+
+                <div class="draft-status-card">
+                    <p><strong>Status:</strong> <span id="draftStatusText">Not started</span></p>
+                    <p><strong>Current Pick:</strong> <span id="currentPickText">None</span></p>
+                    <p><strong>Selected User:</strong> <span id="selectedDraftUserText">None</span></p>
+                </div>
+
+                <div class="draft-controls" id="draftControls">
+                    <button type="button" class="primary-btn small-btn" id="randomizeOrderBtn">Randomize Order</button>
+                    <button type="button" class="primary-btn small-btn" id="resetDraftBtn">Reset Draft</button>
+                    <button type="button" class="danger-btn small-btn" id="clearSelectedUserBtn">Clear Selection</button>
+                </div>
+
+                <div class="draft-grid">
+                    <div class="draft-column">
+                        <h3>Players</h3>
+                        <div class="draft-list" id="playersList">
+                            <p class="empty-text">No players in league yet.</p>
                         </div>
+                    </div>
 
-                        <div class="draft-board-column">
-                            <h3>CPU Teams</h3>
-                            <div id="draftSummaryCpuTeams" class="draft-list"></div>
+                    <div class="draft-column">
+                        <h3>Draft Order</h3>
+                        <div class="draft-list" id="draftOrderList">
+                            <p class="empty-text">Draft order not set.</p>
+                        </div>
+                    </div>
+
+                    <div class="draft-column">
+                        <h3>User Teams</h3>
+                        <div class="draft-list" id="userTeamsList">
+                            <p class="empty-text">No user teams assigned yet.</p>
+                        </div>
+                    </div>
+
+                    <div class="draft-column">
+                        <h3>CPU Teams</h3>
+                        <div class="draft-list scroll-list" id="cpuTeamsList">
+                            <p class="empty-text">No CPU teams available.</p>
                         </div>
                     </div>
                 </div>
 
-                <div class="tab-panel" id="settings">
-                    <h2>League Settings</h2>
+                <p class="draft-help-text">
+                    Click a user in Draft Order or User Teams, then click a team in CPU Teams.
+                </p>
+            </div>
 
-                    <div id="settingsMaddenOnly" class="info-box"></div>
+            <!-- DRAFT SUMMARY -->
+            <div class="tab-panel" id="draftSummary">
+                <h2>Draft Summary</h2>
 
-                    <div id="settingsEditor" class="editor-box" style="display: none;">
-                        <h3 class="settings-subtitle">Rename Relocated Team</h3>
+                <div class="draft-summary-grid">
+                    <div class="draft-column">
+                        <h3>User Teams</h3>
+                        <div class="draft-list" id="draftSummaryUserTeams">
+                            <p class="empty-text">No user teams assigned yet.</p>
+                        </div>
+                    </div>
 
-                        <select id="relocateTeamSelect">
-                            <option value="">Select NFL Team</option>
-                        </select>
-
-                        <input type="text" id="relocateNameInput" placeholder="New team name">
-
-                        <button class="primary-btn small-btn" id="saveRelocationBtn">Save Team Name</button>
-
-                        <div class="settings-list-wrap">
-                            <h3 class="settings-subtitle">Current Custom Team Names</h3>
-                            <div id="customTeamNamesList" class="draft-list"></div>
+                    <div class="draft-column">
+                        <h3>CPU Teams</h3>
+                        <div class="draft-list scroll-list" id="draftSummaryCpuTeams">
+                            <p class="empty-text">No CPU teams left.</p>
                         </div>
                     </div>
                 </div>
+            </div>
 
-            </section>
-        </main>
-    </div>
+            <!-- SETTINGS -->
+            <div class="tab-panel" id="settings">
+                <h2>League Settings</h2>
+
+                <div class="content-card" id="settingsMaddenOnly">
+                    <p class="empty-text">Commissioner can rename relocated NFL teams here.</p>
+                </div>
+
+                <div class="editor-wrap" id="settingsEditor" style="display:none;">
+                    <select id="relocateTeamSelect">
+                        <option value="">Select NFL Team</option>
+                    </select>
+                    <input type="text" id="relocateNameInput" placeholder="New team name" />
+                    <button type="button" class="primary-btn" id="saveRelocationBtn">Save Team Name</button>
+                    <div class="draft-list" id="customTeamNamesList">
+                        <p class="empty-text">No custom team names yet.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
 
     <script src="league.js"></script>
-
-<script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-  import { getFirestore } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-
-  const firebaseConfig = {
-  apiKey: "AIzaSyC5RWc2ioyBMUZW7JuSinxEaNu1_GIT3Ls",
-  authDomain: "commish-central.firebaseapp.com",
-  projectId: "commish-central",
-  storageBucket: "commish-central.firebasestorage.app",
-  messagingSenderId: "29514923176",
-  appId: "1:29514923176:web:7fe2fa38287c7feaf2969d",
-  measurementId: "G-FF5PY2HLH8"
-};
-
-  const app = initializeApp(firebaseConfig);
-  const db = getFirestore(app);
-
-  console.log("🔥 Firebase Connected");
-</script>
-
 </body>
 </html>
