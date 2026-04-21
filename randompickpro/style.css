@@ -1134,3 +1134,120 @@ select {
     opacity: 0.8;
     cursor: not-allowed;
 }
+
+.profile-preview-shell {
+    width: 132px !important;
+    height: 132px !important;
+    border-radius: 50%;
+    padding: 3px;
+    background: linear-gradient(135deg, #00ff9f, #44c8ff);
+    box-shadow: 0 0 18px rgba(0, 255, 159, 0.18);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.profile-preview {
+    width: 126px !important;
+    height: 126px !important;
+    object-fit: cover;
+    border-radius: 50%;
+    display: block;
+    background: #101726;
+}
+
+.profile-layout {
+    display: grid;
+    grid-template-columns: 260px 1fr;
+    gap: 32px;
+    align-items: center;
+    margin-top: 18px;
+}
+
+.large-avatar-wrap {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.large-profile-image {
+    width: 180px !important;
+    height: 180px !important;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid #00ff9f;
+    box-shadow: 0 0 20px rgba(0, 255, 159, 0.18);
+}
+
+.profile-info-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 14px;
+}
+
+.profile-info-item {
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(0, 255, 159, 0.08);
+    border-radius: 14px;
+    padding: 14px 16px;
+}
+
+.profile-label {
+    display: block;
+    font-size: 0.8rem;
+    color: #8fa0b8;
+    margin-bottom: 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+}
+
+.profile-value {
+    display: block;
+    font-size: 1rem;
+    color: #ffffff;
+    font-weight: 700;
+}
+
+.big-preview-shell {
+    width: 160px !important;
+    height: 160px !important;
+    border-radius: 50%;
+    padding: 3px;
+}
+
+.big-profile-preview {
+    width: 154px !important;
+    height: 154px !important;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.crop-controls {
+    width: 100%;
+    max-width: 280px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    align-items: center;
+}
+
+.crop-label {
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: #b9c2d0;
+}
+
+#zoomRange {
+    width: 100%;
+}
+
+@media (max-width: 900px) {
+    .profile-layout {
+        grid-template-columns: 1fr;
+        text-align: center;
+    }
+
+    .profile-info-item {
+        text-align: center;
+    }
+}

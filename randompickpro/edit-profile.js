@@ -5,6 +5,8 @@ document.addEventListener("DOMContentLoaded", () => {
     const otherCountryInput = document.getElementById("otherCountry");
     const profilePictureInput = document.getElementById("profilePicture");
     const profilePreview = document.getElementById("profilePreview");
+    const zoomRange = document.getElementById("zoomRange");
+    const cropControls = document.getElementById("cropControls");
 
     const usernameInput = document.getElementById("username");
     const passwordInput = document.getElementById("password");
@@ -16,6 +18,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const currentUser = localStorage.getItem("currentUser");
 
     let profilePictureData = "";
+    let originalImage = null;
 
     if (!currentUser) {
         window.location.href = "index.html";
@@ -47,16 +50,60 @@ document.addEventListener("DOMContentLoaded", () => {
             countrySelect.value = "Other";
             otherCountryInput.style.display = "block";
             otherCountryInput.value = countryValue;
+        } else {
+            countrySelect.value = "";
+            otherCountryInput.style.display = "none";
+            otherCountryInput.value = "";
         }
+    }
+
+    function cropImageToSquare(img, zoom = 1) {
+        const canvas = document.createElement("canvas");
+        const size = 400;
+
+        canvas.width = size;
+        canvas.height = size;
+
+        const ctx = canvas.getContext("2d");
+
+        const minSide = Math.min(img.width, img.height);
+        const cropSize = minSide / zoom;
+        const sx = (img.width - cropSize) / 2;
+        const sy = (img.height - cropSize) / 2;
+
+        ctx.drawImage(
+            img,
+            sx,
+            sy,
+            cropSize,
+            cropSize,
+            0,
+            0,
+            size,
+            size
+        );
+
+        return canvas.toDataURL("image/jpeg", 0.92);
+    }
+
+    function updatePreviewFromZoom() {
+        if (!originalImage) return;
+        const zoom = parseFloat(zoomRange.value);
+        profilePictureData = cropImageToSquare(originalImage, zoom);
+        profilePreview.src = profilePictureData;
     }
 
     function loadProfile() {
         const storedUser = localStorage.getItem(currentUser);
-        if (!storedUser) return;
+
+        if (!storedUser) {
+            usernameInput.value = currentUser;
+            return;
+        }
 
         const userData = JSON.parse(storedUser);
 
-        usernameInput.value = userData.username || "";
+        usernameInput.value = userData.username || currentUser;
         passwordInput.value = userData.password || "";
         cityInput.value = userData.city || "";
         stateInput.value = userData.state || "";
@@ -89,15 +136,27 @@ document.addEventListener("DOMContentLoaded", () => {
         const reader = new FileReader();
 
         reader.onload = function (e) {
-            profilePictureData = e.target.result;
-            profilePreview.src = profilePictureData;
+            const img = new Image();
+
+            img.onload = function () {
+                originalImage = img;
+                cropControls.style.display = "block";
+                zoomRange.value = "1";
+                updatePreviewFromZoom();
+            };
+
+            img.src = e.target.result;
         };
 
         reader.readAsDataURL(file);
     });
 
+    zoomRange.addEventListener("input", () => {
+        updatePreviewFromZoom();
+    });
+
     saveProfileBtn.addEventListener("click", () => {
-        const username = usernameInput.value.trim();
+        const username = usernameInput.value.trim() || currentUser;
         const password = passwordInput.value.trim();
         const city = cityInput.value.trim();
         const state = stateInput.value.trim();
