@@ -45,8 +45,8 @@ document.addEventListener("DOMContentLoaded", () => {
     const userTeamsList = document.getElementById("userTeamsList");
     const cpuTeamsList = document.getElementById("cpuTeamsList");
 
-    const draftResultsUserTeams = document.getElementById("draftResultsUserTeams");
-    const draftResultsCpuTeams = document.getElementById("draftResultsCpuTeams");
+    const draftSummaryUserTeams = document.getElementById("draftSummaryUserTeams");
+    const draftSummaryCpuTeams = document.getElementById("draftSummaryCpuTeams");
 
     const settingsMaddenOnly = document.getElementById("settingsMaddenOnly");
     const settingsEditor = document.getElementById("settingsEditor");
@@ -323,7 +323,7 @@ document.addEventListener("DOMContentLoaded", () => {
         selectedDraftMode = null;
 
         renderDraft();
-        renderDraftResults();
+        renderDraftSummary();
         renderChat();
         renderSchedule();
         renderTrade();
@@ -455,12 +455,12 @@ document.addEventListener("DOMContentLoaded", () => {
         renderCurrentUserLeagueInfo();
     }
 
-    function renderDraftResults() {
-        if (draftResultsUserTeams) {
+    function renderDraftSummary() {
+        if (draftSummaryUserTeams) {
             if (!league.userTeams || league.userTeams.length === 0) {
-                draftResultsUserTeams.innerHTML = `<p class="empty-text">No user teams assigned yet.</p>`;
+                draftSummaryUserTeams.innerHTML = `<p class="empty-text">No user teams assigned yet.</p>`;
             } else {
-                draftResultsUserTeams.innerHTML = league.userTeams
+                draftSummaryUserTeams.innerHTML = league.userTeams
                     .map((pick) => `<div class="draft-item"><strong>${pick.user}</strong> → ${getDisplayTeamName(pick.team)}</div>`)
                     .join("");
             }
@@ -468,11 +468,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
         const cpuTeams = getCpuTeams();
 
-        if (draftResultsCpuTeams) {
+        if (draftSummaryCpuTeams) {
             if (cpuTeams.length === 0) {
-                draftResultsCpuTeams.innerHTML = `<p class="empty-text">No CPU teams left.</p>`;
+                draftSummaryCpuTeams.innerHTML = `<p class="empty-text">No CPU teams left.</p>`;
             } else {
-                draftResultsCpuTeams.innerHTML = cpuTeams
+                draftSummaryCpuTeams.innerHTML = cpuTeams
                     .map((team) => `<div class="draft-item">${getDisplayTeamName(team)}</div>`)
                     .join("");
             }
@@ -524,7 +524,7 @@ document.addEventListener("DOMContentLoaded", () => {
                         saveLeague();
                         renderSettings();
                         renderDraft();
-                        renderDraftResults();
+                        renderDraftSummary();
                         renderChat();
                         renderSchedule();
                         renderTrade();
@@ -576,7 +576,7 @@ document.addEventListener("DOMContentLoaded", () => {
             selectedDraftMode = null;
             saveLeague();
             renderDraft();
-            renderDraftResults();
+            renderDraftSummary();
             renderChat();
             renderSchedule();
             renderTrade();
@@ -594,7 +594,7 @@ document.addEventListener("DOMContentLoaded", () => {
             selectedDraftMode = null;
             saveLeague();
             renderDraft();
-            renderDraftResults();
+            renderDraftSummary();
             renderChat();
             renderSchedule();
             renderTrade();
@@ -626,7 +626,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
             renderSettings();
             renderDraft();
-            renderDraftResults();
+            renderDraftSummary();
             renderChat();
             renderSchedule();
             renderTrade();
@@ -640,7 +640,7 @@ document.addEventListener("DOMContentLoaded", () => {
     renderRules();
     renderNews();
     renderDraft();
-    renderDraftResults();
+    renderDraftSummary();
     renderSettings();
     renderCurrentUserLeagueInfo();
 });

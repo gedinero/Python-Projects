@@ -10,14 +10,16 @@
 <body>
     <div class="dashboard-page">
         <nav class="top-nav">
-            <div class="logo">RandomPick Pro</div>
-            <div class="nav-links">
-                <a href="dashboard.html">Home</a>
-                <a href="create-league.html">Create League</a>
-                <a href="league-index.html">League Index</a>
-                <a href="#" id="logoutBtn">Logout</a>
-            </div>
-        </nav>
+    <div class="top-nav-inner">
+        <div class="logo">RandomPick Pro</div>
+        <div class="nav-links">
+            <a href="dashboard.html">Home</a>
+            <a href="create-league.html">Create League</a>
+            <a href="league-index.html">League Index</a>
+            <a href="#" id="logoutBtn">Logout</a>
+        </div>
+    </div>
+</nav>
 
         <main class="dashboard-container">
             <section class="league-header">
@@ -33,6 +35,7 @@
                 <button class="tab-btn" data-tab="schedule">Schedule Game</button>
                 <button class="tab-btn" data-tab="trade">Trade Talk</button>
                 <button class="tab-btn" data-tab="draft">Draft</button>
+                <button class="tab-btn" data-tab="draft-summary">Draft Summary</button>
                 <button class="tab-btn" data-tab="settings">League Settings</button>
             </section>
 
@@ -125,25 +128,25 @@
                     </div>
 
                     <div class="draft-help-text">
-                        Click a user in <strong>Draft Order</strong> or <strong>Draft Results</strong>, then click a team in <strong>CPU Teams</strong>.
+                        Click a user in <strong>Draft Order</strong> or <strong>User Teams</strong>, then click a team in <strong>CPU Teams</strong>.
                     </div>
                 </div>
 
-                <div class="tab-panel" id="draft-results">
-    <h2>Draft Results</h2>
+                <div class="tab-panel" id="draft-summary">
+                    <h2>Draft Summary</h2>
 
-    <div class="draft-results-grid">
-        <div class="draft-board-column">
-            <h3>User Teams</h3>
-            <div id="draftResultsUserTeams" class="draft-list"></div>
-        </div>
+                    <div class="draft-summary-grid">
+                        <div class="draft-board-column">
+                            <h3>User Teams</h3>
+                            <div id="draftSummaryUserTeams" class="draft-list"></div>
+                        </div>
 
-        <div class="draft-board-column">
-            <h3>CPU Teams</h3>
-            <div id="draftResultsCpuTeams" class="draft-list"></div>
-        </div>
-    </div>
-</div>
+                        <div class="draft-board-column">
+                            <h3>CPU Teams</h3>
+                            <div id="draftSummaryCpuTeams" class="draft-list"></div>
+                        </div>
+                    </div>
+                </div>
 
                 <div class="tab-panel" id="settings">
                     <h2>League Settings</h2>
