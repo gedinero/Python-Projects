@@ -42,13 +42,41 @@
             <section class="league-content-card">
 
                 <div class="tab-panel active" id="chat">
-                    <h2>League Chat</h2>
-                    <div class="chat-box" id="chatBox"></div>
-                    <div class="chat-input-row">
-                        <input type="text" id="chatInput" placeholder="Send a message...">
-                        <button class="primary-btn small-btn" id="sendChatBtn">Send</button>
-                    </div>
-                </div>
+    <h2>League Chat</h2>
+
+    <div class="chat-box messenger-chat-box" id="chatBox"></div>
+
+    <div class="typing-indicator-row" id="typingIndicatorRow" style="display: none;">
+        <div class="typing-bubble">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+        <span class="typing-text" id="typingText">Typing...</span>
+    </div>
+
+    <div class="chat-toolbar">
+        <button type="button" class="chat-tool-btn emoji-toggle-btn" id="chatEmojiToggleBtn">😀 Emoji</button>
+        <label for="chatImageInput" class="chat-tool-btn">📷 Photo</label>
+        <input type="file" id="chatImageInput" accept="image/*" hidden>
+
+        <button type="button" class="chat-tool-btn" id="gifToggleBtn">GIF</button>
+    </div>
+
+    <div class="emoji-picker-wrap" id="chatEmojiPickerWrap" style="display: none;">
+        <div class="emoji-grid" id="chatEmojiGrid"></div>
+    </div>
+
+    <div class="gif-input-wrap" id="gifInputWrap" style="display: none;">
+        <input type="text" id="gifUrlInput" placeholder="Paste GIF URL here...">
+        <button class="primary-btn small-btn" id="sendGifBtn">Send GIF</button>
+    </div>
+
+    <div class="chat-input-row messenger-input-row">
+        <input type="text" id="chatInput" placeholder="Send a message...">
+        <button class="primary-btn small-btn" id="sendChatBtn">Send</button>
+    </div>
+</div>
 
                 <div class="tab-panel" id="rules">
                     <h2>League Rules</h2>
@@ -71,22 +99,78 @@
                 </div>
 
                 <div class="tab-panel" id="schedule">
-                    <h2>Schedule Game</h2>
-                    <div class="chat-box" id="scheduleBox"></div>
-                    <div class="chat-input-row">
-                        <input type="text" id="scheduleInput" placeholder="Post scheduling message...">
-                        <button class="primary-btn small-btn" id="sendScheduleBtn">Send</button>
-                    </div>
-                </div>
+    <h2>Schedule Game</h2>
+
+    <div class="chat-box messenger-chat-box" id="scheduleBox"></div>
+
+    <div class="typing-indicator-row" id="scheduleTypingIndicatorRow" style="display: none;">
+        <div class="typing-bubble">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+        <span class="typing-text" id="scheduleTypingText">Typing...</span>
+    </div>
+
+    <div class="chat-toolbar">
+        <button type="button" class="chat-tool-btn emoji-toggle-btn" id="scheduleEmojiToggleBtn">😀 Emoji</button>
+        <label for="scheduleImageInput" class="chat-tool-btn">📷 Photo</label>
+        <input type="file" id="scheduleImageInput" accept="image/*" hidden>
+
+        <button type="button" class="chat-tool-btn" id="scheduleGifToggleBtn">GIF</button>
+    </div>
+
+    <div class="emoji-picker-wrap" id="scheduleEmojiPickerWrap" style="display: none;">
+        <div class="emoji-grid" id="scheduleEmojiGrid"></div>
+    </div>
+
+    <div class="gif-input-wrap" id="scheduleGifInputWrap" style="display: none;">
+        <input type="text" id="scheduleGifUrlInput" placeholder="Paste GIF URL here...">
+        <button class="primary-btn small-btn" id="sendScheduleGifBtn">Send GIF</button>
+    </div>
+
+    <div class="chat-input-row messenger-input-row">
+        <input type="text" id="scheduleInput" placeholder="Post scheduling message...">
+        <button class="primary-btn small-btn" id="sendScheduleBtn">Send</button>
+    </div>
+</div>
 
                 <div class="tab-panel" id="trade">
-                    <h2>Trade Talk</h2>
-                    <div class="chat-box" id="tradeBox"></div>
-                    <div class="chat-input-row">
-                        <input type="text" id="tradeInput" placeholder="Post trade talk...">
-                        <button class="primary-btn small-btn" id="sendTradeBtn">Send</button>
-                    </div>
-                </div>
+    <h2>Trade Talk</h2>
+
+    <div class="chat-box messenger-chat-box" id="tradeBox"></div>
+
+    <div class="typing-indicator-row" id="tradeTypingIndicatorRow" style="display: none;">
+        <div class="typing-bubble">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+        <span class="typing-text" id="tradeTypingText">Typing...</span>
+    </div>
+
+    <div class="chat-toolbar">
+        <button type="button" class="chat-tool-btn emoji-toggle-btn" id="tradeEmojiToggleBtn">😀 Emoji</button>
+        <label for="tradeImageInput" class="chat-tool-btn">📷 Photo</label>
+        <input type="file" id="tradeImageInput" accept="image/*" hidden>
+
+        <button type="button" class="chat-tool-btn" id="tradeGifToggleBtn">GIF</button>
+    </div>
+
+    <div class="emoji-picker-wrap" id="tradeEmojiPickerWrap" style="display: none;">
+        <div class="emoji-grid" id="tradeEmojiGrid"></div>
+    </div>
+
+    <div class="gif-input-wrap" id="tradeGifInputWrap" style="display: none;">
+        <input type="text" id="tradeGifUrlInput" placeholder="Paste GIF URL here...">
+        <button class="primary-btn small-btn" id="sendTradeGifBtn">Send GIF</button>
+    </div>
+
+    <div class="chat-input-row messenger-input-row">
+        <input type="text" id="tradeInput" placeholder="Post trade talk...">
+        <button class="primary-btn small-btn" id="sendTradeBtn">Send</button>
+    </div>
+</div>
 
                 <div class="tab-panel" id="draft">
                     <h2>League Draft Board</h2>

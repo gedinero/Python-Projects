@@ -14,14 +14,44 @@ document.addEventListener("DOMContentLoaded", () => {
     const chatBox = document.getElementById("chatBox");
     const chatInput = document.getElementById("chatInput");
     const sendChatBtn = document.getElementById("sendChatBtn");
+    const chatImageInput = document.getElementById("chatImageInput");
+    const chatEmojiToggleBtn = document.getElementById("chatEmojiToggleBtn");
+    const chatEmojiPickerWrap = document.getElementById("chatEmojiPickerWrap");
+    const chatEmojiGrid = document.getElementById("chatEmojiGrid");
+    const gifToggleBtn = document.getElementById("gifToggleBtn");
+    const gifInputWrap = document.getElementById("gifInputWrap");
+    const gifUrlInput = document.getElementById("gifUrlInput");
+    const sendGifBtn = document.getElementById("sendGifBtn");
+    const typingIndicatorRow = document.getElementById("typingIndicatorRow");
+    const typingText = document.getElementById("typingText");
 
     const scheduleBox = document.getElementById("scheduleBox");
     const scheduleInput = document.getElementById("scheduleInput");
     const sendScheduleBtn = document.getElementById("sendScheduleBtn");
+    const scheduleImageInput = document.getElementById("scheduleImageInput");
+    const scheduleEmojiToggleBtn = document.getElementById("scheduleEmojiToggleBtn");
+    const scheduleEmojiPickerWrap = document.getElementById("scheduleEmojiPickerWrap");
+    const scheduleEmojiGrid = document.getElementById("scheduleEmojiGrid");
+    const scheduleGifToggleBtn = document.getElementById("scheduleGifToggleBtn");
+    const scheduleGifInputWrap = document.getElementById("scheduleGifInputWrap");
+    const scheduleGifUrlInput = document.getElementById("scheduleGifUrlInput");
+    const sendScheduleGifBtn = document.getElementById("sendScheduleGifBtn");
+    const scheduleTypingIndicatorRow = document.getElementById("scheduleTypingIndicatorRow");
+    const scheduleTypingText = document.getElementById("scheduleTypingText");
 
     const tradeBox = document.getElementById("tradeBox");
     const tradeInput = document.getElementById("tradeInput");
     const sendTradeBtn = document.getElementById("sendTradeBtn");
+    const tradeImageInput = document.getElementById("tradeImageInput");
+    const tradeEmojiToggleBtn = document.getElementById("tradeEmojiToggleBtn");
+    const tradeEmojiPickerWrap = document.getElementById("tradeEmojiPickerWrap");
+    const tradeEmojiGrid = document.getElementById("tradeEmojiGrid");
+    const tradeGifToggleBtn = document.getElementById("tradeGifToggleBtn");
+    const tradeGifInputWrap = document.getElementById("tradeGifInputWrap");
+    const tradeGifUrlInput = document.getElementById("tradeGifUrlInput");
+    const sendTradeGifBtn = document.getElementById("sendTradeGifBtn");
+    const tradeTypingIndicatorRow = document.getElementById("tradeTypingIndicatorRow");
+    const tradeTypingText = document.getElementById("tradeTypingText");
 
     const rulesDisplay = document.getElementById("rulesDisplay");
     const rulesEditor = document.getElementById("rulesEditor");
@@ -55,8 +85,18 @@ document.addEventListener("DOMContentLoaded", () => {
     const saveRelocationBtn = document.getElementById("saveRelocationBtn");
     const customTeamNamesList = document.getElementById("customTeamNamesList");
 
+    const EMOJIS = [
+        "😀","😂","🤣","😭","😎","🔥","💯","👀","😤","😈",
+        "🥶","🤝","🙏","💪","✅","❌","⚡","🎯","🏈","🏆",
+        "🎮","📅","📣","🚨","😬","😅","🤦","🙌","😡","❤️",
+        "💙","🖤","💚","🫡","💀","🥳","😮","🤔","😴","📸"
+    ];
+
     let selectedDraftUser = null;
     let selectedDraftMode = null;
+    let chatTypingTimeout = null;
+    let scheduleTypingTimeout = null;
+    let tradeTypingTimeout = null;
 
     if (!currentUser) {
         window.location.href = "index.html";
@@ -112,6 +152,22 @@ document.addEventListener("DOMContentLoaded", () => {
             item.id === league.id ? league : item
         );
         localStorage.setItem("leagues", JSON.stringify(updatedLeagues));
+    }
+
+    function getCurrentUserData() {
+        const storedUser = localStorage.getItem(currentUser);
+        if (!storedUser) {
+            return { username: currentUser, profilePicture: "", favoriteNFL: "" };
+        }
+        return JSON.parse(storedUser);
+    }
+
+    function getUserData(username) {
+        const storedUser = localStorage.getItem(username);
+        if (!storedUser) {
+            return { username, profilePicture: "" };
+        }
+        return JSON.parse(storedUser);
     }
 
     function getDefaultTeams(game) {
@@ -184,28 +240,57 @@ document.addEventListener("DOMContentLoaded", () => {
     function renderCurrentUserLeagueInfo() {
         const currentUserPick = getUserPick(currentUser);
         const currentUserTeam = currentUserPick ? getDisplayTeamName(currentUserPick.team) : "No team assigned";
-
         if (myLeagueInfo) {
             myLeagueInfo.textContent = `You: ${currentUser} • Team: ${currentUserTeam}`;
         }
     }
 
+    function buildMessageHtml(message) {
+        const senderData = getUserData(message.user);
+        const avatar = senderData.profilePicture || "";
+        const isOwn = message.user === currentUser;
+        const messageType = message.type || "text";
+
+        let bodyHtml = "";
+
+        if (messageType === "image") {
+            bodyHtml = `<img src="${message.image}" alt="Shared image" class="chat-media-image">`;
+        } else if (messageType === "gif") {
+            bodyHtml = `<img src="${message.gif}" alt="GIF" class="chat-media-image">`;
+        } else {
+            bodyHtml = `<div class="messenger-text">${message.text}</div>`;
+        }
+
+        return `
+            <div class="messenger-row ${isOwn ? "own-message" : ""}">
+                ${!isOwn ? `
+                    <div class="chat-avatar-wrap">
+                        ${avatar ? `<img src="${avatar}" class="chat-avatar" alt="${message.user}">` : `<div class="chat-avatar fallback-avatar">${message.user.charAt(0).toUpperCase()}</div>`}
+                    </div>
+                ` : ""}
+                <div class="messenger-bubble-wrap ${isOwn ? "own-bubble-wrap" : ""}">
+                    <div class="messenger-bubble">
+                        <div class="messenger-user">${getUserDisplayLabel(message.user)}</div>
+                        ${bodyHtml}
+                        <div class="messenger-time">${message.time}</div>
+                    </div>
+                </div>
+                ${isOwn ? `
+                    <div class="chat-avatar-wrap">
+                        ${avatar ? `<img src="${avatar}" class="chat-avatar" alt="${message.user}">` : `<div class="chat-avatar fallback-avatar">${message.user.charAt(0).toUpperCase()}</div>`}
+                    </div>
+                ` : ""}
+            </div>
+        `;
+    }
+
     function renderMessages(box, messages) {
+        if (!box) return;
         if (!messages || messages.length === 0) {
             box.innerHTML = `<p class="empty-text">No messages yet.</p>`;
             return;
         }
-
-        box.innerHTML = messages.map((message) => `
-            <div class="messenger-row ${message.user === currentUser ? "own-message" : ""}">
-                <div class="messenger-bubble">
-                    <div class="messenger-user">${getUserDisplayLabel(message.user)}</div>
-                    <div class="messenger-text">${message.text}</div>
-                    <div class="messenger-time">${message.time}</div>
-                </div>
-            </div>
-        `).join("");
-
+        box.innerHTML = messages.map(buildMessageHtml).join("");
         box.scrollTop = box.scrollHeight;
     }
 
@@ -216,19 +301,82 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    function addMessage(input, arrayName, renderFn) {
-        const text = input.value.trim();
+    function addMessageObject(arrayName, payload, renderFn) {
+        league[arrayName].push(payload);
+        saveLeague();
+        renderFn();
+    }
+
+    function buildBaseMessage(type, extraFields = {}) {
+        const userData = getCurrentUserData();
+        return {
+            user: currentUser,
+            time: getTimeStamp(),
+            profilePicture: userData.profilePicture || "",
+            type,
+            ...extraFields
+        };
+    }
+
+    function addTextMessage(inputEl, arrayName, renderFn, stopTypingFn) {
+        const text = inputEl.value.trim();
         if (text === "") return;
 
-        league[arrayName].push({
-            user: currentUser,
-            text,
-            time: getTimeStamp()
+        addMessageObject(arrayName, buildBaseMessage("text", { text }), renderFn);
+        inputEl.value = "";
+        if (stopTypingFn) stopTypingFn();
+    }
+
+    function addImageMessage(dataUrl, arrayName, renderFn) {
+        addMessageObject(arrayName, buildBaseMessage("image", { image: dataUrl }), renderFn);
+    }
+
+    function addGifMessage(inputEl, arrayName, renderFn, wrapEl = null) {
+        const gifUrl = inputEl.value.trim();
+        if (gifUrl === "") return;
+
+        addMessageObject(arrayName, buildBaseMessage("gif", { gif: gifUrl }), renderFn);
+        inputEl.value = "";
+        if (wrapEl) wrapEl.style.display = "none";
+    }
+
+    function insertEmoji(inputEl, emoji) {
+        if (!inputEl) return;
+        const start = inputEl.selectionStart ?? inputEl.value.length;
+        const end = inputEl.selectionEnd ?? inputEl.value.length;
+        const text = inputEl.value;
+
+        inputEl.value = text.slice(0, start) + emoji + text.slice(end);
+        inputEl.focus();
+
+        const nextPos = start + emoji.length;
+        inputEl.setSelectionRange(nextPos, nextPos);
+    }
+
+    function buildEmojiPicker(gridEl, inputEl, wrapEl) {
+        if (!gridEl || !inputEl || !wrapEl) return;
+
+        gridEl.innerHTML = EMOJIS.map((emoji) => `
+            <button type="button" class="emoji-btn" data-emoji="${emoji}">${emoji}</button>
+        `).join("");
+
+        const buttons = gridEl.querySelectorAll(".emoji-btn");
+        buttons.forEach((button) => {
+            button.addEventListener("click", () => {
+                insertEmoji(inputEl, button.dataset.emoji);
+            });
+        });
+    }
+
+    function togglePanel(targetWrap, otherWraps = []) {
+        if (!targetWrap) return;
+        const shouldOpen = targetWrap.style.display === "none" || targetWrap.style.display === "";
+
+        otherWraps.forEach((wrap) => {
+            if (wrap) wrap.style.display = "none";
         });
 
-        saveLeague();
-        input.value = "";
-        renderFn();
+        targetWrap.style.display = shouldOpen ? "block" : "none";
     }
 
     function renderChat() {
@@ -363,20 +511,13 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     function renderDraft() {
-        if (draftStatusText) {
-            draftStatusText.textContent =
-                league.draftOrder.length > 0 ? "Draft Active" : "Not started";
-        }
+        if (!draftStatusText) return;
+
+        draftStatusText.textContent = league.draftOrder.length > 0 ? "Draft Active" : "Not started";
 
         const remainingOrder = getRemainingDraftOrder();
-
-        if (currentPickText) {
-            currentPickText.textContent = remainingOrder.length > 0 ? remainingOrder[0] : "None";
-        }
-
-        if (selectedDraftUserText) {
-            selectedDraftUserText.textContent = selectedDraftUser ? selectedDraftUser : "None";
-        }
+        currentPickText.textContent = remainingOrder.length > 0 ? remainingOrder[0] : "None";
+        selectedDraftUserText.textContent = selectedDraftUser ? selectedDraftUser : "None";
 
         if (draftControls && isCommish) {
             draftControls.style.display = "flex";
@@ -402,10 +543,7 @@ document.addEventListener("DOMContentLoaded", () => {
                         const isSelected = selectedDraftUser === member && selectedDraftMode === "assign";
 
                         return `
-                            <div
-                                class="draft-item draft-order-item ${alreadyHasTeam ? "draft-disabled" : ""} ${isSelected ? "draft-selected" : ""}"
-                                data-user="${member}"
-                            >
+                            <div class="draft-item draft-order-item ${alreadyHasTeam ? "draft-disabled" : ""} ${isSelected ? "draft-selected" : ""}" data-user="${member}">
                                 <strong>${index + 1}.</strong> ${getUserDisplayLabel(member)}
                             </div>
                         `;
@@ -423,10 +561,7 @@ document.addEventListener("DOMContentLoaded", () => {
                         const isSelected = selectedDraftUser === pick.user && selectedDraftMode === "change";
 
                         return `
-                            <div
-                                class="draft-item user-team-item ${isSelected ? "draft-selected" : ""}"
-                                data-user="${pick.user}"
-                            >
+                            <div class="draft-item user-team-item ${isSelected ? "draft-selected" : ""}" data-user="${pick.user}">
                                 <strong>${pick.user}</strong> → ${getDisplayTeamName(pick.team)}
                             </div>
                         `;
@@ -480,6 +615,8 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     function renderSettings() {
+        if (!settingsMaddenOnly) return;
+
         if (league.game !== "Madden") {
             settingsMaddenOnly.innerHTML = `<p class="empty-text">Team relocation naming is only available for Madden leagues.</p>`;
             if (settingsEditor) settingsEditor.style.display = "none";
@@ -534,21 +671,189 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
+    function showTypingIndicator(rowEl, textEl, text) {
+        if (!rowEl || !textEl) return;
+        textEl.textContent = text;
+        rowEl.style.display = "flex";
+    }
+
+    function stopTypingIndicator(rowEl) {
+        if (!rowEl) return;
+        rowEl.style.display = "none";
+    }
+
+    buildEmojiPicker(chatEmojiGrid, chatInput, chatEmojiPickerWrap);
+    buildEmojiPicker(scheduleEmojiGrid, scheduleInput, scheduleEmojiPickerWrap);
+    buildEmojiPicker(tradeEmojiGrid, tradeInput, tradeEmojiPickerWrap);
+
+    if (chatEmojiToggleBtn) {
+        chatEmojiToggleBtn.addEventListener("click", () => {
+            togglePanel(chatEmojiPickerWrap, [gifInputWrap]);
+        });
+    }
+
+    if (scheduleEmojiToggleBtn) {
+        scheduleEmojiToggleBtn.addEventListener("click", () => {
+            togglePanel(scheduleEmojiPickerWrap, [scheduleGifInputWrap]);
+        });
+    }
+
+    if (tradeEmojiToggleBtn) {
+        tradeEmojiToggleBtn.addEventListener("click", () => {
+            togglePanel(tradeEmojiPickerWrap, [tradeGifInputWrap]);
+        });
+    }
+
+    if (chatInput) {
+        chatInput.addEventListener("input", () => {
+            if (chatInput.value.trim() !== "") {
+                showTypingIndicator(typingIndicatorRow, typingText, `${currentUser} is typing...`);
+                clearTimeout(chatTypingTimeout);
+                chatTypingTimeout = setTimeout(() => stopTypingIndicator(typingIndicatorRow), 900);
+            } else {
+                stopTypingIndicator(typingIndicatorRow);
+            }
+        });
+
+        chatInput.addEventListener("keydown", (event) => {
+            if (event.key === "Enter") {
+                event.preventDefault();
+                addTextMessage(chatInput, "chatMessages", renderChat, () => stopTypingIndicator(typingIndicatorRow));
+            }
+        });
+    }
+
+    if (scheduleInput) {
+        scheduleInput.addEventListener("input", () => {
+            if (scheduleInput.value.trim() !== "") {
+                showTypingIndicator(scheduleTypingIndicatorRow, scheduleTypingText, `${currentUser} is typing...`);
+                clearTimeout(scheduleTypingTimeout);
+                scheduleTypingTimeout = setTimeout(() => stopTypingIndicator(scheduleTypingIndicatorRow), 900);
+            } else {
+                stopTypingIndicator(scheduleTypingIndicatorRow);
+            }
+        });
+
+        scheduleInput.addEventListener("keydown", (event) => {
+            if (event.key === "Enter") {
+                event.preventDefault();
+                addTextMessage(scheduleInput, "scheduleMessages", renderSchedule, () => stopTypingIndicator(scheduleTypingIndicatorRow));
+            }
+        });
+    }
+
+    if (tradeInput) {
+        tradeInput.addEventListener("input", () => {
+            if (tradeInput.value.trim() !== "") {
+                showTypingIndicator(tradeTypingIndicatorRow, tradeTypingText, `${currentUser} is typing...`);
+                clearTimeout(tradeTypingTimeout);
+                tradeTypingTimeout = setTimeout(() => stopTypingIndicator(tradeTypingIndicatorRow), 900);
+            } else {
+                stopTypingIndicator(tradeTypingIndicatorRow);
+            }
+        });
+
+        tradeInput.addEventListener("keydown", (event) => {
+            if (event.key === "Enter") {
+                event.preventDefault();
+                addTextMessage(tradeInput, "tradeMessages", renderTrade, () => stopTypingIndicator(tradeTypingIndicatorRow));
+            }
+        });
+    }
+
     if (sendChatBtn) {
         sendChatBtn.addEventListener("click", () => {
-            addMessage(chatInput, "chatMessages", renderChat);
+            addTextMessage(chatInput, "chatMessages", renderChat, () => stopTypingIndicator(typingIndicatorRow));
         });
     }
 
     if (sendScheduleBtn) {
         sendScheduleBtn.addEventListener("click", () => {
-            addMessage(scheduleInput, "scheduleMessages", renderSchedule);
+            addTextMessage(scheduleInput, "scheduleMessages", renderSchedule, () => stopTypingIndicator(scheduleTypingIndicatorRow));
         });
     }
 
     if (sendTradeBtn) {
         sendTradeBtn.addEventListener("click", () => {
-            addMessage(tradeInput, "tradeMessages", renderTrade);
+            addTextMessage(tradeInput, "tradeMessages", renderTrade, () => stopTypingIndicator(tradeTypingIndicatorRow));
+        });
+    }
+
+    if (gifToggleBtn) {
+        gifToggleBtn.addEventListener("click", () => {
+            togglePanel(gifInputWrap, [chatEmojiPickerWrap]);
+        });
+    }
+
+    if (scheduleGifToggleBtn) {
+        scheduleGifToggleBtn.addEventListener("click", () => {
+            togglePanel(scheduleGifInputWrap, [scheduleEmojiPickerWrap]);
+        });
+    }
+
+    if (tradeGifToggleBtn) {
+        tradeGifToggleBtn.addEventListener("click", () => {
+            togglePanel(tradeGifInputWrap, [tradeEmojiPickerWrap]);
+        });
+    }
+
+    if (sendGifBtn) {
+        sendGifBtn.addEventListener("click", () => {
+            addGifMessage(gifUrlInput, "chatMessages", renderChat, gifInputWrap);
+        });
+    }
+
+    if (sendScheduleGifBtn) {
+        sendScheduleGifBtn.addEventListener("click", () => {
+            addGifMessage(scheduleGifUrlInput, "scheduleMessages", renderSchedule, scheduleGifInputWrap);
+        });
+    }
+
+    if (sendTradeGifBtn) {
+        sendTradeGifBtn.addEventListener("click", () => {
+            addGifMessage(tradeGifUrlInput, "tradeMessages", renderTrade, tradeGifInputWrap);
+        });
+    }
+
+    if (chatImageInput) {
+        chatImageInput.addEventListener("change", (event) => {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                addImageMessage(e.target.result, "chatMessages", renderChat);
+            };
+            reader.readAsDataURL(file);
+            chatImageInput.value = "";
+        });
+    }
+
+    if (scheduleImageInput) {
+        scheduleImageInput.addEventListener("change", (event) => {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                addImageMessage(e.target.result, "scheduleMessages", renderSchedule);
+            };
+            reader.readAsDataURL(file);
+            scheduleImageInput.value = "";
+        });
+    }
+
+    if (tradeImageInput) {
+        tradeImageInput.addEventListener("change", (event) => {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                addImageMessage(e.target.result, "tradeMessages", renderTrade);
+            };
+            reader.readAsDataURL(file);
+            tradeImageInput.value = "";
         });
     }
 
