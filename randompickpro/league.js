@@ -45,6 +45,9 @@ document.addEventListener("DOMContentLoaded", () => {
     const userTeamsList = document.getElementById("userTeamsList");
     const cpuTeamsList = document.getElementById("cpuTeamsList");
 
+    const draftResultsUserTeams = document.getElementById("draftResultsUserTeams");
+    const draftResultsCpuTeams = document.getElementById("draftResultsCpuTeams");
+
     const settingsMaddenOnly = document.getElementById("settingsMaddenOnly");
     const settingsEditor = document.getElementById("settingsEditor");
     const relocateTeamSelect = document.getElementById("relocateTeamSelect");
@@ -320,6 +323,7 @@ document.addEventListener("DOMContentLoaded", () => {
         selectedDraftMode = null;
 
         renderDraft();
+        renderDraftResults();
         renderChat();
         renderSchedule();
         renderTrade();
@@ -451,6 +455,30 @@ document.addEventListener("DOMContentLoaded", () => {
         renderCurrentUserLeagueInfo();
     }
 
+    function renderDraftResults() {
+        if (draftResultsUserTeams) {
+            if (!league.userTeams || league.userTeams.length === 0) {
+                draftResultsUserTeams.innerHTML = `<p class="empty-text">No user teams assigned yet.</p>`;
+            } else {
+                draftResultsUserTeams.innerHTML = league.userTeams
+                    .map((pick) => `<div class="draft-item"><strong>${pick.user}</strong> → ${getDisplayTeamName(pick.team)}</div>`)
+                    .join("");
+            }
+        }
+
+        const cpuTeams = getCpuTeams();
+
+        if (draftResultsCpuTeams) {
+            if (cpuTeams.length === 0) {
+                draftResultsCpuTeams.innerHTML = `<p class="empty-text">No CPU teams left.</p>`;
+            } else {
+                draftResultsCpuTeams.innerHTML = cpuTeams
+                    .map((team) => `<div class="draft-item">${getDisplayTeamName(team)}</div>`)
+                    .join("");
+            }
+        }
+    }
+
     function renderSettings() {
         if (league.game !== "Madden") {
             settingsMaddenOnly.innerHTML = `<p class="empty-text">Team relocation naming is only available for Madden leagues.</p>`;
@@ -496,6 +524,7 @@ document.addEventListener("DOMContentLoaded", () => {
                         saveLeague();
                         renderSettings();
                         renderDraft();
+                        renderDraftResults();
                         renderChat();
                         renderSchedule();
                         renderTrade();
@@ -547,6 +576,7 @@ document.addEventListener("DOMContentLoaded", () => {
             selectedDraftMode = null;
             saveLeague();
             renderDraft();
+            renderDraftResults();
             renderChat();
             renderSchedule();
             renderTrade();
@@ -564,6 +594,7 @@ document.addEventListener("DOMContentLoaded", () => {
             selectedDraftMode = null;
             saveLeague();
             renderDraft();
+            renderDraftResults();
             renderChat();
             renderSchedule();
             renderTrade();
@@ -595,6 +626,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
             renderSettings();
             renderDraft();
+            renderDraftResults();
             renderChat();
             renderSchedule();
             renderTrade();
@@ -608,6 +640,7 @@ document.addEventListener("DOMContentLoaded", () => {
     renderRules();
     renderNews();
     renderDraft();
+    renderDraftResults();
     renderSettings();
     renderCurrentUserLeagueInfo();
 });

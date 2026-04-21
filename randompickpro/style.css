@@ -1138,3 +1138,95 @@ body {
     opacity: 0.6;
     cursor: not-allowed;
 }
+
+.league-user-line {
+    margin-top: 8px;
+    color: #00ff9f;
+    font-weight: 600;
+}
+
+.settings-subtitle {
+    margin: 12px 0 10px 0;
+    font-size: 1rem;
+}
+
+.settings-list-wrap {
+    margin-top: 20px;
+}
+
+.settings-rename-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+}
+
+.remove-rename-btn {
+    padding: 8px 12px;
+    border-radius: 8px;
+    border: 1px solid #ff4d4d;
+    background: transparent;
+    color: #ff4d4d;
+    cursor: pointer;
+    font-size: 0.8rem;
+    transition: 0.2s ease;
+}
+
+.remove-rename-btn:hover {
+    background: #ff4d4d;
+    color: white;
+}
+
+#settings .editor-box input,
+#settings .editor-box select {
+    width: 100%;
+    padding: 14px;
+    margin: 10px 0;
+    border-radius: 12px;
+    border: none;
+    background: #1a1a1a;
+    color: white;
+    outline: none;
+}
+
+.draft-help-text {
+    margin-top: 18px;
+    color: #bdbdbd;
+    line-height: 1.5;
+}
+
+.draft-results-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+}
+
+.draft-order-item,
+.user-team-item,
+.cpu-team-item {
+    cursor: pointer;
+    transition: 0.2s ease;
+}
+
+.draft-order-item:hover,
+.user-team-item:hover,
+.cpu-clickable:hover {
+    border: 1px solid rgba(0, 255, 159, 0.35);
+    box-shadow: 0 0 10px rgba(0, 255, 159, 0.15);
+}
+
+.draft-selected {
+    border: 1px solid #00ff9f !important;
+    box-shadow: 0 0 12px rgba(0, 255, 159, 0.25);
+}
+
+.draft-disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+@media (max-width: 768px) {
+    .draft-results-grid {
+        grid-template-columns: 1fr;
+    }
+}
