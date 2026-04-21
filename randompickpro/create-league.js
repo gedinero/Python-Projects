@@ -43,11 +43,18 @@ document.addEventListener("DOMContentLoaded", () => {
                 type: leagueType,
                 commissioner: currentUser,
                 isCommissioner: isCommissioner,
+                members: [currentUser],
+
                 chatMessages: [],
-                rules: [],
-                news: [],
-                schedule: [],
-                tradeTalk: []
+                scheduleMessages: [],
+                tradeMessages: [],
+
+                rulesText: "",
+                newsText: "",
+
+                draftStarted: false,
+                draftOrder: [],
+                userTeams: []
             };
 
             leagues.push(newLeague);

@@ -23,6 +23,7 @@
             <section class="league-header">
                 <h1 id="leagueTitle">League Name</h1>
                 <p id="leagueMeta" class="dashboard-subtext"></p>
+                <p id="myLeagueInfo" class="league-user-line">You: -- • Team: No team assigned</p>
             </section>
 
             <section class="league-tabs">
@@ -32,11 +33,11 @@
                 <button class="tab-btn" data-tab="schedule">Schedule Game</button>
                 <button class="tab-btn" data-tab="trade">Trade Talk</button>
                 <button class="tab-btn" data-tab="draft">Draft</button>
+                <button class="tab-btn" data-tab="settings">League Settings</button>
             </section>
 
             <section class="league-content-card">
 
-                <!-- GENERAL CHAT -->
                 <div class="tab-panel active" id="chat">
                     <h2>League Chat</h2>
                     <div class="chat-box" id="chatBox"></div>
@@ -46,10 +47,8 @@
                     </div>
                 </div>
 
-                <!-- RULES -->
                 <div class="tab-panel" id="rules">
                     <h2>League Rules</h2>
-
                     <div id="rulesDisplay" class="info-box"></div>
 
                     <div id="rulesEditor" class="editor-box" style="display: none;">
@@ -58,10 +57,8 @@
                     </div>
                 </div>
 
-                <!-- NEWS -->
                 <div class="tab-panel" id="news">
                     <h2>League News</h2>
-
                     <div id="newsDisplay" class="info-box"></div>
 
                     <div id="newsEditor" class="editor-box" style="display: none;">
@@ -70,7 +67,6 @@
                     </div>
                 </div>
 
-                <!-- SCHEDULE CHAT -->
                 <div class="tab-panel" id="schedule">
                     <h2>Schedule Game</h2>
                     <div class="chat-box" id="scheduleBox"></div>
@@ -80,7 +76,6 @@
                     </div>
                 </div>
 
-                <!-- TRADE CHAT -->
                 <div class="tab-panel" id="trade">
                     <h2>Trade Talk</h2>
                     <div class="chat-box" id="tradeBox"></div>
@@ -91,49 +86,69 @@
                 </div>
 
                 <div class="tab-panel" id="draft">
-    <h2>League Draft</h2>
+                    <h2>League Draft Board</h2>
 
-    <div class="draft-status-box">
-        <p><strong>Status:</strong> <span id="draftStatusText">Not started</span></p>
-    </div>
+                    <div class="draft-top-bar">
+                        <div class="draft-status-box">
+                            <p><strong>Status:</strong> <span id="draftStatusText">Not started</span></p>
+                            <p><strong>Current Pick:</strong> <span id="currentPickText">None</span></p>
+                            <p><strong>Selected User:</strong> <span id="selectedDraftUserText">None</span></p>
+                        </div>
 
-    <div id="draftControls" class="draft-controls" style="display: none;">
-        <button class="primary-btn small-btn" id="startDraftBtn">Start Draft</button>
-        <button class="delete-league-btn" id="redraftBtn">Redraft</button>
+                        <div id="draftControls" class="draft-controls" style="display: none;">
+                            <button class="primary-btn small-btn" id="randomizeOrderBtn">Randomize Order</button>
+                            <button class="primary-btn small-btn" id="resetDraftBtn">Reset Draft</button>
+                            <button class="delete-league-btn" id="clearSelectedUserBtn">Clear Selection</button>
+                        </div>
+                    </div>
 
-        <div class="draft-assignment-box">
-            <select id="draftUserSelect">
-                <option value="">Select User</option>
-            </select>
+                    <div class="draft-board">
+                        <div class="draft-board-column">
+                            <h3>Players</h3>
+                            <div id="playersList" class="draft-list"></div>
+                        </div>
 
-            <select id="draftTeamSelect">
-                <option value="">Select Team</option>
-            </select>
+                        <div class="draft-board-column">
+                            <h3>Draft Order</h3>
+                            <div id="draftOrderList" class="draft-list"></div>
+                        </div>
 
-            <button class="primary-btn small-btn" id="assignTeamBtn">Assign Team</button>
-        </div>
-    </div>
+                        <div class="draft-board-column">
+                            <h3>Draft Results</h3>
+                            <div id="userTeamsList" class="draft-list"></div>
+                        </div>
 
-    <div class="draft-columns">
-        <div class="draft-list-card">
-            <h3>Available Teams</h3>
-            <div id="availableTeamsList" class="draft-list"></div>
-        </div>
+                        <div class="draft-board-column">
+                            <h3>CPU Teams</h3>
+                            <div id="cpuTeamsList" class="draft-list"></div>
+                        </div>
+                    </div>
 
-        <div class="draft-list-card">
-            <h3>Draft Results</h3>
-            <div id="draftResultsList" class="draft-list"></div>
-        </div>
-    </div>
-</div>
+                    <div class="draft-help-text">
+                        Click a user in <strong>Draft Order</strong> or <strong>Draft Results</strong>, then click a team in <strong>CPU Teams</strong>.
+                    </div>
+                </div>
 
-                <!-- DRAFT -->
-                <div class="tab-panel" id="draft">
-                    <h2>Draft</h2>
-                    <div class="chat-box" id="draftBox"></div>
-                    <div class="chat-input-row">
-                        <input type="text" id="draftInput" placeholder="Post draft discussion...">
-                        <button class="primary-btn small-btn" id="sendDraftBtn">Send</button>
+                <div class="tab-panel" id="settings">
+                    <h2>League Settings</h2>
+
+                    <div id="settingsMaddenOnly" class="info-box"></div>
+
+                    <div id="settingsEditor" class="editor-box" style="display: none;">
+                        <h3 class="settings-subtitle">Rename Relocated Team</h3>
+
+                        <select id="relocateTeamSelect">
+                            <option value="">Select NFL Team</option>
+                        </select>
+
+                        <input type="text" id="relocateNameInput" placeholder="New team name">
+
+                        <button class="primary-btn small-btn" id="saveRelocationBtn">Save Team Name</button>
+
+                        <div class="settings-list-wrap">
+                            <h3 class="settings-subtitle">Current Custom Team Names</h3>
+                            <div id="customTeamNamesList" class="draft-list"></div>
+                        </div>
                     </div>
                 </div>
 
