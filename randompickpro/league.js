@@ -190,36 +190,42 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     function getUserProfileImage(username) {
-        const storedProfiles = JSON.parse(localStorage.getItem("profiles")) || [];
-        const storedUsers = JSON.parse(localStorage.getItem("users")) || [];
-        const currentUserProfileImage =
+    const currentUser = localStorage.getItem("currentUser");
+    const storedUsers = JSON.parse(localStorage.getItem("users")) || [];
+
+    const matchedUser = storedUsers.find(
+        (user) => user.username === username || user.name === username
+    );
+
+    if (matchedUser && matchedUser.profilePicture && matchedUser.profilePicture.trim() !== "") {
+        return matchedUser.profilePicture;
+    }
+
+    const directUser = localStorage.getItem(username);
+    if (directUser) {
+        try {
+            const parsedUser = JSON.parse(directUser);
+            if (parsedUser.profilePicture && parsedUser.profilePicture.trim() !== "") {
+                return parsedUser.profilePicture;
+            }
+        } catch (error) {
+            console.error("Could not parse stored user profile:", error);
+        }
+    }
+
+    if (username === currentUser) {
+        const fallback =
             localStorage.getItem("profileImage") ||
-            localStorage.getItem("userProfileImage") ||
             localStorage.getItem("currentUserProfileImage") ||
             "";
 
-        const profileMatch =
-            storedProfiles.find((profile) => profile.username === username || profile.name === username) ||
-            storedUsers.find((profile) => profile.username === username || profile.name === username);
-
-        if (profileMatch) {
-            const image =
-                profileMatch.profileImage ||
-                profileMatch.avatar ||
-                profileMatch.photo ||
-                "";
-
-            if (typeof image === "string" && image.trim() !== "") {
-                return image;
-            }
+        if (fallback.trim() !== "") {
+            return fallback;
         }
-
-        if (username === currentUser && currentUserProfileImage.trim() !== "") {
-            return currentUserProfileImage;
-        }
-
-        return `https://ui-avatars.com/api/?name=${encodeURIComponent(username)}&background=8dffb8&color=08110d&bold=true`;
     }
+
+    return `https://ui-avatars.com/api/?name=${encodeURIComponent(username)}&background=8dffb8&color=08110d&bold=true`;
+}
 
     function buildMessageBubble(message) {
         let body = "";

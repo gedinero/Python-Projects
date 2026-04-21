@@ -1,8 +1,10 @@
 document.addEventListener("DOMContentLoaded", () => {
     const saveProfileBtn = document.getElementById("saveProfileBtn");
     const message = document.getElementById("profileMessage");
+
     const countrySelect = document.getElementById("country");
     const otherCountryInput = document.getElementById("otherCountry");
+
     const profilePictureInput = document.getElementById("profilePicture");
     const profilePreview = document.getElementById("profilePreview");
     const zoomRange = document.getElementById("zoomRange");
@@ -26,6 +28,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     function showMessage(text, color) {
+        if (!message) return;
         message.textContent = text;
         message.style.color = color;
     }
@@ -41,6 +44,8 @@ document.addEventListener("DOMContentLoaded", () => {
             "Australia",
             "Japan"
         ];
+
+        if (!countrySelect || !otherCountryInput) return;
 
         if (builtInCountries.includes(countryValue)) {
             countrySelect.value = countryValue;
@@ -87,118 +92,158 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     function updatePreviewFromZoom() {
-        if (!originalImage) return;
-        const zoom = parseFloat(zoomRange.value);
+        if (!originalImage || !zoomRange) return;
+
+        const zoom = parseFloat(zoomRange.value || "1");
         profilePictureData = cropImageToSquare(originalImage, zoom);
-        profilePreview.src = profilePictureData;
+
+        if (profilePreview) {
+            profilePreview.src = profilePictureData;
+        }
     }
 
     function loadProfile() {
         const storedUser = localStorage.getItem(currentUser);
 
         if (!storedUser) {
-            usernameInput.value = currentUser;
+            if (usernameInput) usernameInput.value = currentUser;
             return;
         }
 
         const userData = JSON.parse(storedUser);
 
-        usernameInput.value = userData.username || currentUser;
-        passwordInput.value = userData.password || "";
-        cityInput.value = userData.city || "";
-        stateInput.value = userData.state || "";
-        favoriteNFLSelect.value = userData.favoriteNFL || "";
-        favoriteCollegeSelect.value = userData.favoriteCollege || "";
+        if (usernameInput) usernameInput.value = userData.username || currentUser;
+        if (passwordInput) passwordInput.value = userData.password || "";
+        if (cityInput) cityInput.value = userData.city || "";
+        if (stateInput) stateInput.value = userData.state || "";
+        if (favoriteNFLSelect) favoriteNFLSelect.value = userData.favoriteNFL || "";
+        if (favoriteCollegeSelect) favoriteCollegeSelect.value = userData.favoriteCollege || "";
 
         setCountryFields(userData.country || "");
 
         if (userData.profilePicture) {
             profilePictureData = userData.profilePicture;
-            profilePreview.src = profilePictureData;
-        } else {
+            if (profilePreview) {
+                profilePreview.src = profilePictureData;
+            }
+        } else if (profilePreview) {
             profilePreview.src = "";
         }
     }
 
-    countrySelect.addEventListener("change", () => {
-        if (countrySelect.value === "Other") {
-            otherCountryInput.style.display = "block";
-        } else {
-            otherCountryInput.style.display = "none";
-            otherCountryInput.value = "";
-        }
-    });
+    if (countrySelect) {
+        countrySelect.addEventListener("change", () => {
+            if (countrySelect.value === "Other") {
+                otherCountryInput.style.display = "block";
+            } else {
+                otherCountryInput.style.display = "none";
+                otherCountryInput.value = "";
+            }
+        });
+    }
 
-    profilePictureInput.addEventListener("change", (event) => {
-        const file = event.target.files[0];
-        if (!file) return;
+    if (profilePictureInput) {
+        profilePictureInput.addEventListener("change", (event) => {
+            const file = event.target.files[0];
+            if (!file) return;
 
-        const reader = new FileReader();
+            const reader = new FileReader();
 
-        reader.onload = function (e) {
-            const img = new Image();
+            reader.onload = function (e) {
+                const img = new Image();
 
-            img.onload = function () {
-                originalImage = img;
-                cropControls.style.display = "block";
-                zoomRange.value = "1";
-                updatePreviewFromZoom();
+                img.onload = function () {
+                    originalImage = img;
+
+                    if (cropControls) {
+                        cropControls.style.display = "block";
+                    }
+
+                    if (zoomRange) {
+                        zoomRange.value = "1";
+                    }
+
+                    updatePreviewFromZoom();
+                };
+
+                img.src = e.target.result;
             };
 
-            img.src = e.target.result;
-        };
+            reader.readAsDataURL(file);
+        });
+    }
 
-        reader.readAsDataURL(file);
-    });
+    if (zoomRange) {
+        zoomRange.addEventListener("input", () => {
+            updatePreviewFromZoom();
+        });
+    }
 
-    zoomRange.addEventListener("input", () => {
-        updatePreviewFromZoom();
-    });
+    if (saveProfileBtn) {
+        saveProfileBtn.addEventListener("click", () => {
+            const username = usernameInput?.value.trim() || currentUser;
+            const password = passwordInput?.value.trim() || "";
+            const city = cityInput?.value.trim() || "";
+            const state = stateInput?.value.trim() || "";
 
-    saveProfileBtn.addEventListener("click", () => {
-        const username = usernameInput.value.trim() || currentUser;
-        const password = passwordInput.value.trim();
-        const city = cityInput.value.trim();
-        const state = stateInput.value.trim();
+            let country = countrySelect?.value || "";
+            if (country === "Other") {
+                country = otherCountryInput?.value.trim() || "";
+            }
 
-        let country = countrySelect.value;
-        if (country === "Other") {
-            country = otherCountryInput.value.trim();
-        }
+            const favoriteNFL = favoriteNFLSelect?.value || "";
+            const favoriteCollege = favoriteCollegeSelect?.value || "";
 
-        const favoriteNFL = favoriteNFLSelect.value;
-        const favoriteCollege = favoriteCollegeSelect.value;
+            if (!username || !password || !city || !state || !country || !favoriteNFL || !favoriteCollege) {
+                showMessage("Please fill in all fields.", "#ff5c5c");
+                return;
+            }
 
-        if (!username || !password || !city || !state || !country || !favoriteNFL || !favoriteCollege) {
-            showMessage("Please fill in all fields.", "#ff5c5c");
-            return;
-        }
+            const updatedUser = {
+                username,
+                password,
+                city,
+                state,
+                country,
+                favoriteNFL,
+                favoriteCollege,
+                profilePicture: profilePictureData
+            };
 
-        const updatedUser = {
-            username,
-            password,
-            city,
-            state,
-            country,
-            favoriteNFL,
-            favoriteCollege,
-            profilePicture: profilePictureData
-        };
+            let users = JSON.parse(localStorage.getItem("users")) || [];
 
-        let users = JSON.parse(localStorage.getItem("users")) || [];
-        users = users.map((user) =>
-            user.username === currentUser ? updatedUser : user
-        );
+            const duplicateUsername = users.some(
+                (user) =>
+                    user.username.toLowerCase() === username.toLowerCase() &&
+                    user.username !== currentUser
+            );
 
-        localStorage.setItem("users", JSON.stringify(users));
-        localStorage.setItem(currentUser, JSON.stringify(updatedUser));
+            if (duplicateUsername) {
+                showMessage("Username already exists. Choose another.", "#ff5c5c");
+                return;
+            }
 
-        showMessage("Profile updated successfully!", "#00ff9f");
+            users = users.map((user) =>
+                user.username === currentUser ? updatedUser : user
+            );
 
-        setTimeout(() => {
-            window.location.href = "dashboard.html";
-        }, 700);
-    });
+            if (username !== currentUser) {
+                localStorage.removeItem(currentUser);
+            }
+
+            localStorage.setItem("users", JSON.stringify(users));
+            localStorage.setItem(username, JSON.stringify(updatedUser));
+            localStorage.setItem("currentUser", username);
+            localStorage.setItem("profileImage", profilePictureData || "");
+            localStorage.setItem("currentUserProfileImage", profilePictureData || "");
+
+            showMessage("Profile updated successfully.", "#00ff9f");
+
+            setTimeout(() => {
+                window.location.href = "dashboard.html";
+            }, 700);
+        });
+    }
 
     loadProfile();
 });
