@@ -846,3 +846,119 @@ a {
         grid-template-columns: 1fr;
     }
 }
+
+/* LOGIN CARD SPACING FIX */
+.hero {
+    margin-bottom: 40px;
+}
+
+.hero h1 {
+    margin-bottom: 14px;
+}
+
+.hero p {
+    margin-top: 6px;
+}
+
+.card {
+    padding: 36px 30px;
+}
+
+.card h2 {
+    margin-bottom: 24px;
+}
+
+.card input {
+    margin: 0 0 14px 0;
+}
+
+.card input:last-of-type {
+    margin-bottom: 18px;
+}
+
+.primary-btn {
+    margin-top: 8px;
+}
+
+.divider {
+    margin: 18px 0;
+}
+
+.secondary-btn {
+    margin-top: 0;
+}
+
+.league-index-card {
+    padding: 36px;
+}
+
+#leagueSearchInput {
+    margin-bottom: 32px;
+}
+
+.league-index-card .my-leagues-grid {
+    margin-top: 18px;
+}
+
+/* FIX DROPDOWN TEXT VISIBILITY */
+select {
+    background-color: var(--input);
+    color: var(--text);
+}
+
+select option {
+    background-color: #0f172a;
+    color: #ffffff;
+}
+
+select {
+    appearance: none;
+    -webkit-appearance: none;
+    cursor: pointer;
+}
+
+.league-form-card {
+    margin: 0 auto;
+}
+/* CREATE LEAGUE FORM SPACING FIX */
+.league-form-card {
+    padding: 36px 32px;
+}
+
+.league-form-card h2 {
+    margin-bottom: 26px;
+}
+
+.league-form-card input,
+.league-form-card select {
+    margin-bottom: 14px;
+}
+
+/* give extra space before button */
+.league-form-card button {
+    margin-top: 10px;
+}
+
+/* PREMIUM FORM SPACING */
+.league-form-card {
+    padding: 40px 36px;
+}
+
+.league-form-card h2 {
+    margin-bottom: 28px;
+}
+
+.league-form-card input,
+.league-form-card select {
+    margin-bottom: 16px;
+    min-height: 52px;
+}
+
+.league-form-card button {
+    margin-top: 14px;
+}
+
+.league-form-card input:focus,
+.league-form-card select:focus {
+    transform: scale(1.01);
+}
