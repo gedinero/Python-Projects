@@ -1,6 +1,7 @@
 document.addEventListener("DOMContentLoaded", () => {
     const logoutBtn = document.getElementById("logoutBtn");
     const createLeagueBtn = document.getElementById("createLeagueBtn");
+    const leagueMessage = document.getElementById("leagueMessage");
 
     const currentUser = localStorage.getItem("currentUser");
 
@@ -30,11 +31,30 @@ document.addEventListener("DOMContentLoaded", () => {
                 leagueType === "" ||
                 isCommissioner === ""
             ) {
-                alert("Fill in all league fields.");
+                if (leagueMessage) {
+                    leagueMessage.textContent = "Fill in all league fields.";
+                    leagueMessage.style.color = "#ff5c5c";
+                } else {
+                    alert("Fill in all league fields.");
+                }
                 return;
             }
 
             const leagues = JSON.parse(localStorage.getItem("leagues")) || [];
+
+            const leagueExists = leagues.some(
+                (league) => league.name.toLowerCase() === leagueName.toLowerCase()
+            );
+
+            if (leagueExists) {
+                if (leagueMessage) {
+                    leagueMessage.textContent = "League name already exists. Choose a different name.";
+                    leagueMessage.style.color = "#ff5c5c";
+                } else {
+                    alert("League name already exists. Choose a different name.");
+                }
+                return;
+            }
 
             const newLeague = {
                 id: Date.now(),
@@ -52,14 +72,19 @@ document.addEventListener("DOMContentLoaded", () => {
                 rulesText: "",
                 newsText: "",
 
-                draftStarted: false,
                 draftOrder: [],
-                userTeams: []
+                userTeams: [],
+                teamNameOverrides: {}
             };
 
             leagues.push(newLeague);
             localStorage.setItem("leagues", JSON.stringify(leagues));
             localStorage.setItem("selectedLeagueId", newLeague.id);
+
+            if (leagueMessage) {
+                leagueMessage.textContent = "League created successfully!";
+                leagueMessage.style.color = "#00ff9f";
+            }
 
             window.location.href = "league.html";
         });

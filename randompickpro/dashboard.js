@@ -17,7 +17,9 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
     }
 
-    welcomeMessage.textContent = `Welcome back, ${currentUser}`;
+    if (welcomeMessage) {
+        welcomeMessage.textContent = `Welcome back, ${currentUser}`;
+    }
 
     const storedUser = localStorage.getItem(currentUser);
 
@@ -84,10 +86,22 @@ document.addEventListener("DOMContentLoaded", () => {
             button.addEventListener("click", () => {
                 const leagueId = Number(button.dataset.id);
 
-                const confirmed = confirm("Are you sure you want to delete this league?");
-                if (!confirmed) return;
+                const confirmDelete = confirm("Are you sure you want to delete this league? This cannot be undone.");
+                if (!confirmDelete) return;
 
                 const leagues = JSON.parse(localStorage.getItem("leagues")) || [];
+                const leagueToDelete = leagues.find((league) => league.id === leagueId);
+
+                if (!leagueToDelete) {
+                    alert("League not found.");
+                    return;
+                }
+
+                if (leagueToDelete.commissioner !== currentUser) {
+                    alert("Only the commissioner can delete this league.");
+                    return;
+                }
+
                 const updatedLeagues = leagues.filter((league) => league.id !== leagueId);
                 localStorage.setItem("leagues", JSON.stringify(updatedLeagues));
 
