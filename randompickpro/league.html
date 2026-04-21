@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>League | RandomPick Pro</title>
+    <title>League | Commish Central</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
@@ -11,7 +11,7 @@
     <div class="dashboard-page">
         <nav class="top-nav">
     <div class="top-nav-inner">
-        <div class="logo">RandomPick Pro</div>
+        <div class="logo">Commish Central</div>
         <div class="nav-links">
             <a href="dashboard.html">Home</a>
             <a href="create-league.html">Create League</a>
@@ -260,5 +260,26 @@
     </div>
 
     <script src="league.js"></script>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+  import { getFirestore } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+  const firebaseConfig = {
+  apiKey: "AIzaSyC5RWc2ioyBMUZW7JuSinxEaNu1_GIT3Ls",
+  authDomain: "commish-central.firebaseapp.com",
+  projectId: "commish-central",
+  storageBucket: "commish-central.firebasestorage.app",
+  messagingSenderId: "29514923176",
+  appId: "1:29514923176:web:7fe2fa38287c7feaf2969d",
+  measurementId: "G-FF5PY2HLH8"
+};
+
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+
+  console.log("🔥 Firebase Connected");
+</script>
+
 </body>
 </html>
