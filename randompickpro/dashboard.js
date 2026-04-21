@@ -41,7 +41,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (editProfileBtn) {
         editProfileBtn.addEventListener("click", () => {
-            window.location.href = "create-account.html";
+            window.location.href = "edit-profile.html";
         });
     }
 

@@ -1063,3 +1063,74 @@ select {
 .profile-card-form .divider {
     margin: 16px 0 12px;
 }
+
+/* PROFILE PAGE CLEANUP */
+.profile-card-form {
+    max-width: 460px;
+    padding: 34px 28px 30px;
+}
+
+.profile-card-form h2 {
+    margin-bottom: 18px;
+}
+
+.profile-upload-wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 22px;
+}
+
+.profile-preview-shell {
+    width: 88px;
+    height: 88px;
+    border-radius: 50%;
+    padding: 2px;
+    background: linear-gradient(135deg, #00ff9f, #44c8ff);
+    box-shadow: 0 0 16px rgba(0, 255, 159, 0.18);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.profile-preview {
+    width: 84px;
+    height: 84px;
+    object-fit: cover;
+    border-radius: 50%;
+    display: block;
+    background: #101726;
+}
+
+.upload-btn {
+    width: 100%;
+    max-width: 260px;
+    margin-top: 0;
+}
+
+.form-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    margin-bottom: 12px;
+}
+
+.profile-card-form input,
+.profile-card-form select {
+    margin: 0 !important;
+    min-height: 52px;
+}
+
+.profile-card-form .primary-btn {
+    margin-top: 16px;
+}
+
+.profile-card-form .divider {
+    margin: 18px 0 12px;
+}
+
+.profile-card-form input[readonly] {
+    opacity: 0.8;
+    cursor: not-allowed;
+}
