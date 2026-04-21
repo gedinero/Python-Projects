@@ -8,6 +8,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const profileCountry = document.getElementById("profileCountry");
     const profileNFL = document.getElementById("profileNFL");
     const profileCollege = document.getElementById("profileCollege");
+    const dashboardProfileImage = document.getElementById("dashboardProfileImage");
     const editProfileBtn = document.getElementById("editProfileBtn");
 
     const currentUser = localStorage.getItem("currentUser");
@@ -31,6 +32,11 @@ document.addEventListener("DOMContentLoaded", () => {
         if (profileCountry) profileCountry.textContent = userData.country || "";
         if (profileNFL) profileNFL.textContent = userData.favoriteNFL || "";
         if (profileCollege) profileCollege.textContent = userData.favoriteCollege || "";
+
+        if (dashboardProfileImage && userData.profilePicture) {
+            dashboardProfileImage.src = userData.profilePicture;
+            dashboardProfileImage.style.display = "block";
+        }
     }
 
     if (editProfileBtn) {

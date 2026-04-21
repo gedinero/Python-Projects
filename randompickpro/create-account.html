@@ -17,6 +17,12 @@
         <div class="card">
             <h2>Create Account</h2>
 
+            <div class="profile-upload-wrap">
+                <img id="profilePreview" class="profile-preview" src="" alt="Profile Preview" style="display: none;">
+                <label for="profilePicture" class="secondary-btn link-btn upload-btn">Upload Profile Picture</label>
+                <input type="file" id="profilePicture" accept="image/*" hidden>
+            </div>
+
             <input type="text" id="username" placeholder="Username">
             <input type="password" id="password" placeholder="Password">
             <input type="text" id="city" placeholder="City">
