@@ -1,8 +1,8 @@
 const firebaseConfig = {
   apiKey: "AIzaSy...",
-  authDomain: "randompickpro.firebaseapp.com",
-  projectId: "randompickpro",
-  storageBucket: "randompickpro.firebasestorage.app",
+  authDomain: "commishcentral.firebaseapp.com",
+  projectId: "commishcentral",
+  storageBucket: "commishcentral.firebasestorage.app",
   messagingSenderId: "1004557081539",
   appId: "1:1004557081539:web:ec1b4db908294ed18ffb76"
 };
