@@ -4,28 +4,43 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Commish Central</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+    <div class="dashboard-page auth-page">
 
-    <div class="container">
-        <div class="hero">
-            <h1>Commish Central</h1>
-            <p>Run leagues without the chaos.</p>
-        </div>
+        <main class="dashboard-container auth-container">
 
-        <div class="card">
-            <h2>Welcome Back</h2>
+            <section class="dashboard-hero auth-hero">
+                <p class="eyebrow">Commish Central</p>
+                <h1>Welcome Back</h1>
+                <p class="dashboard-subtext">
+                    Run leagues without the chaos.
+                </p>
+            </section>
 
-            <input type="text" id="loginUsername" placeholder="Email or Username">
-            <input type="password" id="loginPassword" placeholder="Password">
+            <section class="profile-card auth-card">
+                <div class="profile-header auth-card-header">
+                    <h2>Login</h2>
+                </div>
 
-            <button class="primary-btn" id="loginBtn">Login</button>
+                <div class="form-stack">
+                    <input type="text" id="loginUsername" placeholder="Username">
+                    <input type="password" id="loginPassword" placeholder="Password">
+                </div>
 
-            <p class="divider">or</p>
+                <p id="loginMessage" class="league-message"></p>
 
-            <a href="create-account.html" class="secondary-btn link-btn">Create Account</a>
-        </div>
+                <div class="auth-actions">
+                    <button id="loginBtn" class="primary-btn">Login</button>
+                    <span class="auth-divider">or</span>
+                    <a href="create-account.html" class="secondary-btn link-btn">Create Account</a>
+                </div>
+            </section>
+
+        </main>
+
     </div>
 
     <script src="auth.js"></script>
