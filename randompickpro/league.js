@@ -227,6 +227,7 @@ document.addEventListener("DOMContentLoaded", () => {
     return `https://ui-avatars.com/api/?name=${encodeURIComponent(username)}&background=8dffb8&color=08110d&bold=true`;
 }
 
+
     function buildMessageBubble(message) {
         let body = "";
 
@@ -285,6 +286,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         inputEl.value = "";
     }
+    
 
     function sendImageMessage(dataUrl, arrayName, renderFn) {
         addMessage(arrayName, {

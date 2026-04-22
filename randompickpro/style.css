@@ -1365,3 +1365,204 @@ textarea {
         padding: 24px;
     }
 }
+
+/* ===== RULES + NEWS SPACING FIX ===== */
+
+#rulesPanel,
+#newsPanel {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 18px;
+}
+
+#rulesPanel h2,
+#newsPanel h2 {
+    margin-bottom: 6px;
+}
+
+#rulesDisplay,
+#newsDisplay {
+    text-align: center;
+    margin: 8px 0 10px 0;
+    min-height: 24px;
+}
+
+#rulesText,
+#newsText {
+    margin-top: 4px;
+    margin-bottom: 18px;
+    min-height: 150px;
+}
+
+#saveRulesBtn,
+#saveNewsBtn {
+    margin-top: 2px;
+    align-self: flex-start;
+}
+
+/* ===== LEAGUE PAGE HEADER FIX (OLD NAV SYSTEM) ===== */
+.topbar {
+    width: min(1360px, calc(100% - 48px)) !important;
+    margin: 18px auto 0 auto !important;
+    padding: 18px 26px !important;
+    border-radius: 24px !important;
+    background: rgba(12, 18, 29, 0.92) !important;
+    border: 1px solid rgba(255, 255, 255, 0.06) !important;
+    box-shadow: 0 18px 50px rgba(0, 0, 0, 0.35) !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    gap: 20px !important;
+}
+
+.brand {
+    font-size: 2rem !important;
+    font-weight: 900 !important;
+    letter-spacing: -0.05em !important;
+    color: #8dffb8 !important;
+    text-shadow: 0 0 18px rgba(98, 245, 157, 0.24) !important;
+    line-height: 1 !important;
+    margin: 0 !important;
+}
+
+.topnav {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: flex-end !important;
+    gap: 20px !important;
+    flex-wrap: wrap !important;
+}
+
+.topnav a,
+.topnav button {
+    background: none !important;
+    border: none !important;
+    color: #f8fafc !important;
+    font-size: 1rem !important;
+    font-weight: 800 !important;
+    text-decoration: none !important;
+    cursor: pointer !important;
+    line-height: 1.2 !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    box-shadow: none !important;
+}
+
+.topnav a:hover,
+.topnav button:hover {
+    color: #8dffb8 !important;
+}
+
+/* ===== RULES + NEWS SPACING FIX ===== */
+#rulesDisplay,
+#newsDisplay {
+    margin: 12px 0 18px 0 !important;
+    text-align: center !important;
+    min-height: 24px !important;
+}
+
+#rulesEditor,
+#newsEditor {
+    display: grid !important;
+    gap: 16px !important;
+    margin-top: 12px !important;
+}
+
+#rulesInput,
+#newsInput {
+    margin: 0 !important;
+    min-height: 170px !important;
+}
+
+#saveRulesBtn,
+#saveNewsBtn {
+    margin-top: 2px !important;
+    justify-self: start !important;
+}
+
+/* optional extra breathing room under tab title */
+#rulesPanel h2,
+#newsPanel h2 {
+    margin-bottom: 8px !important;
+}
+
+/* ===== MAKE SETTINGS LOOK LIKE RULES / NEWS ===== */
+
+#settingsPanel {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: stretch !important;
+}
+
+#settingsEditor {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 18px !important;
+    width: 100% !important;
+    max-width: none !important;
+    margin: 12px 0 0 0 !important;
+}
+
+#settingsEditor select,
+#settingsEditor input {
+    width: 100% !important;
+    margin: 0 !important;
+}
+
+#saveRelocationBtn {
+    align-self: flex-start !important;
+    margin-top: 2px !important;
+}
+
+#customTeamNamesList {
+    text-align: center !important;
+    margin-top: 18px !important;
+    width: 100% !important;
+}
+
+/* ===== TYPING INDICATOR ===== */
+.typing-indicator {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 10px 14px;
+    border-radius: 16px;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    margin: 8px 0 12px 0;
+    width: fit-content;
+}
+
+.typing-indicator span {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #8dffb8;
+    display: inline-block;
+    animation: typingBounce 1.2s infinite ease-in-out;
+}
+
+.typing-indicator span:nth-child(2) {
+    animation-delay: 0.15s;
+}
+
+.typing-indicator span:nth-child(3) {
+    animation-delay: 0.3s;
+}
+
+@keyframes typingBounce {
+    0%, 80%, 100% {
+        transform: translateY(0);
+        opacity: 0.45;
+    }
+    40% {
+        transform: translateY(-6px);
+        opacity: 1;
+    }
+}
+
+.hidden {
+    display: none !important;
+}
