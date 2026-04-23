@@ -1,30 +1,43 @@
 document.addEventListener("DOMContentLoaded", () => {
-    const typingIndicator = document.getElementById("typingIndicator");
+    const currentUser = localStorage.getItem("currentUser");
+    const users = JSON.parse(localStorage.getItem("users")) || [];
+    const currentUserData = users.find(user => user.username === currentUser);
+    const profilePic = currentUserData && currentUserData.profilePicture
+        ? currentUserData.profilePicture
+        : "";
 
-    const inputIds = [
-        "chatInput",
-        "scheduleInput",
-        "tradeInput"
+    const configs = [
+        { inputId: "chatInput", indicatorId: "chatTypingIndicator" },
+        { inputId: "scheduleInput", indicatorId: "scheduleTypingIndicator" },
+        { inputId: "tradeInput", indicatorId: "tradeTypingIndicator" }
     ];
 
-    let typingTimeout;
+    configs.forEach(({ inputId, indicatorId }) => {
+        const input = document.getElementById(inputId);
+        const indicator = document.getElementById(indicatorId);
 
-    function showTypingIndicator() {
-        if (!typingIndicator) return;
+        if (!input || !indicator) return;
 
-        typingIndicator.classList.remove("hidden");
-
-        clearTimeout(typingTimeout);
-        typingTimeout = setTimeout(() => {
-            typingIndicator.classList.add("hidden");
-        }, 1200);
-    }
-
-    inputIds.forEach((id) => {
-        const input = document.getElementById(id);
-
-        if (input) {
-            input.addEventListener("input", showTypingIndicator);
+        const avatar = indicator.querySelector(".typing-avatar");
+        if (avatar && profilePic) {
+            avatar.src = profilePic;
+            avatar.style.display = "block";
         }
+
+        let typingTimeout;
+
+        input.addEventListener("input", () => {
+            if (input.value.trim() === "") {
+                indicator.classList.add("hidden");
+                return;
+            }
+
+            indicator.classList.remove("hidden");
+
+            clearTimeout(typingTimeout);
+            typingTimeout = setTimeout(() => {
+                indicator.classList.add("hidden");
+            }, 1200);
+        });
     });
 });
