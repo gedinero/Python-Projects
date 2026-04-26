@@ -2378,3 +2378,21 @@ textarea {
   }
 }
 
+/* ===== BRAND (LOGO + TEXT) ===== */
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.brand-logo {
+  width: 28px;
+  height: 28px;
+  object-fit: contain;
+}
+
+.brand-text {
+  font-weight: 600;
+  font-size: 18px;
+  color: #a3ffcf;
+}
