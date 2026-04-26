@@ -1,92 +1,141 @@
-document.addEventListener("DOMContentLoaded", () => {
-    const logoutBtn = document.getElementById("logoutBtn");
-    const createLeagueBtn = document.getElementById("createLeagueBtn");
-    const leagueMessage = document.getElementById("leagueMessage");
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import {
+  getFirestore,
+  collection,
+  addDoc,
+  query,
+  where,
+  getDocs,
+  serverTimestamp
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-    const currentUser = localStorage.getItem("currentUser");
+const firebaseConfig = {
+  apiKey: "AIzaSyC5RWc2ioyBMUZW7JuSinxEaNu1_GIT3Ls",
+  authDomain: "commish-central.firebaseapp.com",
+  projectId: "commish-central",
+  storageBucket: "commish-central.firebasestorage.app",
+  messagingSenderId: "29514923176",
+  appId: "1:29514923176:web:7fe2fa38287c7feaf2969d",
+  measurementId: "G-FF5PY2HLH8"
+};
 
-    if (!currentUser) {
-        window.location.href = "index.html";
-        return;
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+const form = document.getElementById("createLeagueForm");
+const leagueMessage = document.getElementById("leagueMessage");
+
+const savedUser = localStorage.getItem("currentUser");
+
+if (!savedUser) {
+  window.location.href = "index.html";
+}
+
+const currentUser = JSON.parse(savedUser);
+
+function showMessage(text, color = "") {
+  if (!leagueMessage) return;
+  leagueMessage.textContent = text;
+  leagueMessage.style.color = color;
+}
+
+function normalizeLeagueName(name) {
+  return name.trim().toLowerCase().replace(/\s+/g, " ");
+}
+
+async function leagueNameAlreadyExists(name) {
+  const nameLower = normalizeLeagueName(name);
+
+  const leagueQuery = query(
+    collection(db, "leagues"),
+    where("nameLower", "==", nameLower)
+  );
+
+  const snapshot = await getDocs(leagueQuery);
+
+  return !snapshot.empty;
+}
+
+form?.addEventListener("submit", async (event) => {
+  event.preventDefault();
+
+  const leagueName = document.getElementById("leagueName").value.trim();
+  const leagueGame = document.getElementById("leagueGame").value;
+  const leagueType = document.getElementById("leagueType").value;
+  const isCommissioner = document.getElementById("isCommissioner").value;
+
+  if (!leagueName || !leagueGame || !leagueType || !isCommissioner) {
+    showMessage("Please fill in all league fields.", "#ff5c5c");
+    return;
+  }
+
+  if (isCommissioner !== "yes") {
+    showMessage("Only commissioners can create leagues. Use League Index to join as a player.", "#ff5c5c");
+    return;
+  }
+
+  try {
+    showMessage("Checking league name...");
+
+    const leagueTaken = await leagueNameAlreadyExists(leagueName);
+
+    if (leagueTaken) {
+      showMessage("League name already taken.", "#ff5c5c");
+      return;
     }
 
-    if (logoutBtn) {
-        logoutBtn.addEventListener("click", (event) => {
-            event.preventDefault();
-            localStorage.removeItem("currentUser");
-            window.location.href = "index.html";
-        });
-    }
+    showMessage("Creating league...");
 
-    if (createLeagueBtn) {
-        createLeagueBtn.addEventListener("click", () => {
-            const leagueName = document.getElementById("leagueName").value.trim();
-            const gameType = document.getElementById("gameType").value;
-            const leagueType = document.getElementById("leagueType").value;
-            const isCommissioner = document.getElementById("isCommissioner").value;
+    const newLeague = {
+      name: leagueName,
+      nameLower: normalizeLeagueName(leagueName),
+      game: leagueGame,
+      type: leagueType,
 
-            if (
-                leagueName === "" ||
-                gameType === "" ||
-                leagueType === "" ||
-                isCommissioner === ""
-            ) {
-                if (leagueMessage) {
-                    leagueMessage.textContent = "Fill in all league fields.";
-                    leagueMessage.style.color = "#ff5c5c";
-                } else {
-                    alert("Fill in all league fields.");
-                }
-                return;
-            }
+      commissioner: currentUser.username,
+      commissionerUid: currentUser.uid,
 
-            const leagues = JSON.parse(localStorage.getItem("leagues")) || [];
+      members: [currentUser.username],
+      memberUids: [currentUser.uid],
 
-            const leagueExists = leagues.some(
-                (league) => league.name.toLowerCase() === leagueName.toLowerCase()
-            );
+      chatMessages: [],
+      scheduleMessages: [],
+      tradeMessages: [],
 
-            if (leagueExists) {
-                if (leagueMessage) {
-                    leagueMessage.textContent = "League name already exists. Choose a different name.";
-                    leagueMessage.style.color = "#ff5c5c";
-                } else {
-                    alert("League name already exists. Choose a different name.");
-                }
-                return;
-            }
+      rulesText: "",
+      newsText: "",
 
-            const newLeague = {
-                id: Date.now(),
-                name: leagueName,
-                game: gameType,
-                type: leagueType,
-                commissioner: currentUser,
-                isCommissioner: isCommissioner,
-                members: [currentUser],
+      draftOrder: [],
+      userTeams: [],
+      teamNameOverrides: {},
 
-                chatMessages: [],
-                scheduleMessages: [],
-                tradeMessages: [],
+      createdAt: serverTimestamp(),
+      updatedAt: serverTimestamp()
+    };
 
-                rulesText: "",
-                newsText: "",
+    const docRef = await addDoc(collection(db, "leagues"), newLeague);
 
-                draftOrder: [],
-                userTeams: [],
-                teamNameOverrides: {}
-            };
+    const localLeague = {
+      id: docRef.id,
+      ...newLeague,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString()
+    };
 
-            leagues.push(newLeague);
-            localStorage.setItem("leagues", JSON.stringify(leagues));
-            localStorage.setItem("selectedLeagueId", newLeague.id);
+    const localLeagues = JSON.parse(localStorage.getItem("leagues")) || [];
+    localLeagues.push(localLeague);
 
-            if (leagueMessage) {
-                leagueMessage.textContent = "League created successfully!";
-                leagueMessage.style.color = "#00ff9f";
-            }
+    localStorage.setItem("leagues", JSON.stringify(localLeagues));
+    localStorage.setItem("selectedLeagueId", docRef.id);
 
-            window.location.href = "league.html";
-        });
-    }
+    showMessage("League created successfully.", "#00ff9f");
+
+    setTimeout(() => {
+      window.location.href = "league.html";
+    }, 700);
+
+  } catch (error) {
+    console.error("Create league error:", error);
+    showMessage(error.message, "#ff5c5c");
+  }
 });
