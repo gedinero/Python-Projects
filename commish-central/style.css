@@ -2270,3 +2270,110 @@ textarea {
   border-radius: 50%;
   display: block;
 }
+
+/* MOBILE LEAGUE TAB MENU */
+@media (max-width: 768px) {
+  .league-tabs {
+    display: flex;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    gap: 10px;
+    padding: 12px 12px 16px;
+    margin: 20px 0;
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background: rgba(5, 10, 20, 0.96);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(141, 255, 184, 0.15);
+    scrollbar-width: none;
+  }
+
+  .league-tabs::-webkit-scrollbar {
+    display: none;
+  }
+
+  .league-tabs .tab-btn {
+    flex: 0 0 auto;
+    min-width: max-content;
+    padding: 12px 18px;
+    border-radius: 999px;
+    font-size: 0.95rem;
+    white-space: nowrap;
+  }
+
+  .league-tabs .tab-btn.active {
+    background: linear-gradient(135deg, #8dffb8, #58e891);
+    color: #06120b;
+    box-shadow: 0 0 18px rgba(141, 255, 184, 0.35);
+  }
+
+  .league-header {
+    padding: 24px 16px 10px;
+  }
+
+  .league-header h1 {
+    font-size: 2.6rem;
+  }
+
+  .league-header p {
+    font-size: 1rem;
+  }
+
+  .league-panel-shell {
+    margin-top: 10px;
+  }
+}
+
+/* MOBILE HAMBURGER LEAGUE MENU */
+.league-menu-toggle {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .league-menu-toggle {
+    display: block;
+    width: calc(100% - 32px);
+    margin: 18px auto 10px;
+    padding: 14px 18px;
+    border-radius: 18px;
+    border: 1px solid rgba(141, 255, 184, 0.35);
+    background: rgba(255, 255, 255, 0.04);
+    color: #8dffb8;
+    font-weight: 900;
+    font-size: 1rem;
+  }
+
+  .league-tabs {
+    display: none;
+    flex-direction: column;
+    gap: 10px;
+    width: calc(100% - 32px);
+    margin: 0 auto 18px;
+  }
+
+  .league-tabs.open {
+    display: flex;
+  }
+
+  .league-tabs .tab-btn {
+    width: 100%;
+    padding: 14px 16px;
+    border-radius: 16px;
+    font-size: 1rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .league-tabs {
+    display: none !important;
+  }
+
+  .league-tabs.open {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 10px !important;
+    width: calc(100% - 32px) !important;
+    margin: 0 auto 18px !important;
+  }
+}

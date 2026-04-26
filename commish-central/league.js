@@ -31,6 +31,9 @@ document.addEventListener("DOMContentLoaded", () => {
   const tabButtons = document.querySelectorAll(".tab-btn");
   const tabPanels = document.querySelectorAll(".tab-panel");
 
+  const leagueMenuToggle = document.getElementById("leagueMenuToggle");
+  const leagueTabs = document.querySelector(".league-tabs");
+
   const chatBox = document.getElementById("chatBox");
   const chatInput = document.getElementById("chatInput");
   const sendChatBtn = document.getElementById("sendChatBtn");
@@ -485,15 +488,23 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  tabButtons.forEach((button) => {
-    button.addEventListener("click", () => {
-      tabButtons.forEach((btn) => btn.classList.remove("active"));
-      tabPanels.forEach((panel) => panel.classList.remove("active"));
+  leagueMenuToggle?.addEventListener("click", () => {
+  leagueTabs?.classList.toggle("open");
+});
 
-      button.classList.add("active");
-      document.getElementById(button.dataset.tab)?.classList.add("active");
-    });
+tabButtons.forEach((button) => {
+  button.addEventListener("click", () => {
+    tabButtons.forEach((btn) => btn.classList.remove("active"));
+    tabPanels.forEach((panel) => panel.classList.remove("active"));
+
+    button.classList.add("active");
+    document.getElementById(button.dataset.tab)?.classList.add("active");
+
+    if (window.innerWidth <= 768) {
+      leagueTabs?.classList.remove("open");
+    }
   });
+});
 
   logoutBtn?.addEventListener("click", (event) => {
     event.preventDefault();
