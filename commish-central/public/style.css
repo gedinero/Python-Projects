@@ -2384,3 +2384,26 @@ textarea {
   margin: 0 auto 10px;
   filter: drop-shadow(0 0 12px rgba(0, 255, 150, 0.4));
 }
+
+.top-nav-inner img[src="/cc-logo.png"] {
+  display: block !important;
+  width: 70px !important;
+  height: auto !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  position: relative !important;
+  z-index: 9999 !important;
+}
+
+.top-nav .logo {
+  font-weight: 700 !important;   /* boldness */
+  font-size: 20px !important;    /* size */
+  letter-spacing: 0.5px;         /* clean spacing */
+  color: #7CFFB2;                /* your green */
+}
+
+.top-nav-inner {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
