@@ -2478,3 +2478,25 @@ textarea {
   align-items: center !important;
   gap: 28px !important;
 }
+
+.top-nav-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 6%;
+}
+
+.logo-img {
+  width: 60px;
+}
+
+.logo-text {
+  font-size: 26px;
+  font-weight: 700;
+  color: #7CFFB2;
+}
+
+.nav-links {
+  display: flex;
+  gap: 25px;
+}
