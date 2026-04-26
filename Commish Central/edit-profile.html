@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
   <title>Edit Profile | Commish Central</title>
 
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800;900&display=swap" rel="stylesheet">
@@ -52,20 +53,47 @@
           <label for="profilePicture" class="upload-photo-btn">Choose New Picture</label>
           <input type="file" id="profilePicture" accept="image/*" style="display:none;">
 
-          <div id="cropControls" class="crop-controls" style="display:none; width:100%; max-width:320px; margin-top:12px;">
-            <label for="zoomRange" style="display:block; margin-bottom:8px; font-weight:700;">
-              Adjust Profile Picture
-            </label>
+          <div id="cropControls" class="crop-controls" style="display:none; width:100%; max-width:360px; margin-top:12px;">
 
+            <label for="zoomRange" style="display:block; margin-bottom:8px; font-weight:700;">
+              Zoom
+            </label>
             <input
               type="range"
               id="zoomRange"
               min="1"
-              max="3"
+              max="4"
               step="0.05"
               value="1"
               style="width:100%;"
             >
+
+            <label for="moveXRange" style="display:block; margin-top:14px; margin-bottom:8px; font-weight:700;">
+              Move Left / Right
+            </label>
+            <input
+              type="range"
+              id="moveXRange"
+              min="-200"
+              max="200"
+              step="1"
+              value="0"
+              style="width:100%;"
+            >
+
+            <label for="moveYRange" style="display:block; margin-top:14px; margin-bottom:8px; font-weight:700;">
+              Move Up / Down
+            </label>
+            <input
+              type="range"
+              id="moveYRange"
+              min="-200"
+              max="200"
+              step="1"
+              value="0"
+              style="width:100%;"
+            >
+
           </div>
         </div>
 
@@ -156,7 +184,7 @@
           <p id="profileMessage" class="league-message"></p>
 
           <div class="edit-profile-actions">
-            <button id="saveProfileBtn" class="primary-btn">Save Profile</button>
+            <button type="button" id="saveProfileBtn" class="primary-btn">Save Profile</button>
             <a href="dashboard.html" class="secondary-btn link-btn">Back to Profile</a>
           </div>
         </div>
@@ -167,7 +195,7 @@
   </main>
 
   <script src="logout.js"></script>
-  <script src="edit-profile.js"></script>
+  <script type="module" src="edit-profile.js"></script>
 
 </body>
 </html>

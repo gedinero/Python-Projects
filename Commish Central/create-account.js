@@ -30,8 +30,11 @@ const accountMessage = document.getElementById("accountMessage");
 
 const profilePictureInput = document.getElementById("profilePicture");
 const profilePreview = document.getElementById("profilePreview");
-const zoomRange = document.getElementById("zoomRange");
 const cropControls = document.getElementById("cropControls");
+
+const zoomRange = document.getElementById("zoomRange");
+const moveXRange = document.getElementById("moveXRange");
+const moveYRange = document.getElementById("moveYRange");
 
 const countrySelect = document.getElementById("country");
 const otherCountryInput = document.getElementById("otherCountry");
@@ -40,16 +43,14 @@ let profilePictureData = "";
 let originalImage = null;
 
 function showMessage(text) {
-  if (accountMessage) {
-    accountMessage.textContent = text;
-  }
+  if (accountMessage) accountMessage.textContent = text;
 }
 
 function normalizeUsername(username) {
   return username.trim().toLowerCase().replace(/\s+/g, " ");
 }
 
-function cropImageToSquare(img, zoom = 1) {
+function cropImage(img, zoom = 1, moveX = 0, moveY = 0) {
   const canvas = document.createElement("canvas");
   const size = 400;
 
@@ -57,21 +58,33 @@ function cropImageToSquare(img, zoom = 1) {
   canvas.height = size;
 
   const ctx = canvas.getContext("2d");
-  const minSide = Math.min(img.width, img.height);
-  const cropSize = minSide / zoom;
-  const sx = (img.width - cropSize) / 2;
-  const sy = (img.height - cropSize) / 2;
+
+  const scale = zoom;
+  const baseSize = Math.min(img.width, img.height);
+  const cropSize = baseSize / scale;
+
+  let sx = (img.width - cropSize) / 2;
+  let sy = (img.height - cropSize) / 2;
+
+  sx += Number(moveX);
+  sy += Number(moveY);
+
+  sx = Math.max(0, Math.min(sx, img.width - cropSize));
+  sy = Math.max(0, Math.min(sy, img.height - cropSize));
 
   ctx.drawImage(img, sx, sy, cropSize, cropSize, 0, 0, size, size);
 
   return canvas.toDataURL("image/jpeg", 0.92);
 }
 
-function updatePreviewFromZoom() {
-  if (!originalImage || !zoomRange || !profilePreview) return;
+function updateProfilePreview() {
+  if (!originalImage || !profilePreview) return;
 
-  const zoom = parseFloat(zoomRange.value || "1");
-  profilePictureData = cropImageToSquare(originalImage, zoom);
+  const zoom = parseFloat(zoomRange?.value || "1");
+  const moveX = parseFloat(moveXRange?.value || "0");
+  const moveY = parseFloat(moveYRange?.value || "0");
+
+  profilePictureData = cropImage(originalImage, zoom, moveX, moveY);
 
   profilePreview.src = profilePictureData;
   profilePreview.style.display = "block";
@@ -80,19 +93,19 @@ function updatePreviewFromZoom() {
 async function usernameAlreadyExists(username) {
   const usernameLower = normalizeUsername(username);
 
-  const lowerQuery = query(
+  const usernameLowerQuery = query(
     collection(db, "users"),
     where("usernameLower", "==", usernameLower)
   );
 
-  const exactQuery = query(
+  const usernameExactQuery = query(
     collection(db, "users"),
     where("username", "==", username.trim())
   );
 
   const [lowerSnapshot, exactSnapshot] = await Promise.all([
-    getDocs(lowerQuery),
-    getDocs(exactQuery)
+    getDocs(usernameLowerQuery),
+    getDocs(usernameExactQuery)
   ]);
 
   return !lowerSnapshot.empty || !exactSnapshot.empty;
@@ -111,9 +124,12 @@ profilePictureInput?.addEventListener("change", () => {
       originalImage = img;
 
       if (cropControls) cropControls.style.display = "block";
-      if (zoomRange) zoomRange.value = "1";
 
-      updatePreviewFromZoom();
+      if (zoomRange) zoomRange.value = "1";
+      if (moveXRange) moveXRange.value = "0";
+      if (moveYRange) moveYRange.value = "0";
+
+      updateProfilePreview();
     };
 
     img.src = event.target.result;
@@ -122,7 +138,9 @@ profilePictureInput?.addEventListener("change", () => {
   reader.readAsDataURL(file);
 });
 
-zoomRange?.addEventListener("input", updatePreviewFromZoom);
+zoomRange?.addEventListener("input", updateProfilePreview);
+moveXRange?.addEventListener("input", updateProfilePreview);
+moveYRange?.addEventListener("input", updateProfilePreview);
 
 countrySelect?.addEventListener("change", () => {
   if (!otherCountryInput) return;
@@ -194,7 +212,8 @@ form?.addEventListener("submit", async (event) => {
 
     await setDoc(doc(db, "users", user.uid), {
       ...newUser,
-      createdAt: serverTimestamp()
+      createdAt: serverTimestamp(),
+      updatedAt: serverTimestamp()
     });
 
     localStorage.setItem("currentUser", JSON.stringify(newUser));
