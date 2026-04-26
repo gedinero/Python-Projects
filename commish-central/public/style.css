@@ -2418,3 +2418,23 @@ textarea {
   text-shadow: 0 0 18px rgba(141, 255, 184, 0.45) !important;
   white-space: nowrap !important;
 }
+
+.top-nav-inner {
+  display: flex !important;
+  align-items: center !important;
+  gap: 18px !important;
+}
+
+.top-nav-inner img {
+  width: 70px !important;
+  height: auto !important;
+  flex: 0 0 auto !important;
+}
+
+.nav-brand-text {
+  font-size: 28px !important;
+  font-weight: 800 !important;
+  color: #8dffb8 !important;
+  line-height: 1 !important;
+  white-space: nowrap !important;
+}
