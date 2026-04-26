@@ -1,6 +1,15 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-import { getFirestore, doc, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+import {
+  getFirestore,
+  doc,
+  setDoc,
+  serverTimestamp,
+  collection,
+  query,
+  where,
+  getDocs
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyC5RWc2ioyBMUZW7JuSinxEaNu1_GIT3Ls",
@@ -30,6 +39,16 @@ const otherCountryInput = document.getElementById("otherCountry");
 let profilePictureData = "";
 let originalImage = null;
 
+function showMessage(text) {
+  if (accountMessage) {
+    accountMessage.textContent = text;
+  }
+}
+
+function normalizeUsername(username) {
+  return username.trim().toLowerCase().replace(/\s+/g, " ");
+}
+
 function cropImageToSquare(img, zoom = 1) {
   const canvas = document.createElement("canvas");
   const size = 400;
@@ -38,7 +57,6 @@ function cropImageToSquare(img, zoom = 1) {
   canvas.height = size;
 
   const ctx = canvas.getContext("2d");
-
   const minSide = Math.min(img.width, img.height);
   const cropSize = minSide / zoom;
   const sx = (img.width - cropSize) / 2;
@@ -59,56 +77,74 @@ function updatePreviewFromZoom() {
   profilePreview.style.display = "block";
 }
 
-if (profilePictureInput) {
-  profilePictureInput.addEventListener("change", () => {
-    const file = profilePictureInput.files[0];
-    if (!file) return;
+async function usernameAlreadyExists(username) {
+  const usernameLower = normalizeUsername(username);
 
-    const reader = new FileReader();
+  const lowerQuery = query(
+    collection(db, "users"),
+    where("usernameLower", "==", usernameLower)
+  );
 
-    reader.onload = (event) => {
-      const img = new Image();
+  const exactQuery = query(
+    collection(db, "users"),
+    where("username", "==", username.trim())
+  );
 
-      img.onload = () => {
-        originalImage = img;
+  const [lowerSnapshot, exactSnapshot] = await Promise.all([
+    getDocs(lowerQuery),
+    getDocs(exactQuery)
+  ]);
 
-        if (cropControls) cropControls.style.display = "block";
-        if (zoomRange) zoomRange.value = "1";
+  return !lowerSnapshot.empty || !exactSnapshot.empty;
+}
 
-        updatePreviewFromZoom();
-      };
+profilePictureInput?.addEventListener("change", () => {
+  const file = profilePictureInput.files[0];
+  if (!file) return;
 
-      img.src = event.target.result;
+  const reader = new FileReader();
+
+  reader.onload = (event) => {
+    const img = new Image();
+
+    img.onload = () => {
+      originalImage = img;
+
+      if (cropControls) cropControls.style.display = "block";
+      if (zoomRange) zoomRange.value = "1";
+
+      updatePreviewFromZoom();
     };
 
-    reader.readAsDataURL(file);
-  });
-}
+    img.src = event.target.result;
+  };
 
-if (zoomRange) {
-  zoomRange.addEventListener("input", updatePreviewFromZoom);
-}
+  reader.readAsDataURL(file);
+});
 
-if (countrySelect && otherCountryInput) {
-  countrySelect.addEventListener("change", () => {
-    otherCountryInput.style.display = countrySelect.value === "Other" ? "block" : "none";
+zoomRange?.addEventListener("input", updatePreviewFromZoom);
 
-    if (countrySelect.value !== "Other") {
-      otherCountryInput.value = "";
-    }
-  });
-}
+countrySelect?.addEventListener("change", () => {
+  if (!otherCountryInput) return;
 
-form.addEventListener("submit", async (event) => {
+  otherCountryInput.style.display = countrySelect.value === "Other" ? "block" : "none";
+
+  if (countrySelect.value !== "Other") {
+    otherCountryInput.value = "";
+  }
+});
+
+form?.addEventListener("submit", async (event) => {
   event.preventDefault();
 
   const username = document.getElementById("username").value.trim();
   const email = document.getElementById("email").value.trim();
   const password = document.getElementById("password").value;
+
   const city = document.getElementById("city").value.trim();
   const state = document.getElementById("state").value.trim();
 
-  const country = countrySelect.value === "Other"
+  const country = countrySelect?.value === "Other"
     ? otherCountryInput.value.trim()
     : countrySelect.value;
 
@@ -116,24 +152,37 @@ form.addEventListener("submit", async (event) => {
   const favoriteCollege = document.getElementById("favoriteCollege").value;
 
   if (!username || !email || !password) {
-    accountMessage.textContent = "Please enter username, email, and password.";
+    showMessage("Please enter username, email, and password.");
     return;
   }
 
   if (password.length < 6) {
-    accountMessage.textContent = "Password must be at least 6 characters.";
+    showMessage("Password must be at least 6 characters.");
     return;
   }
 
   try {
-    accountMessage.textContent = "Creating account...";
+    showMessage("Checking username...");
+
+    const usernameTaken = await usernameAlreadyExists(username);
+
+    if (usernameTaken) {
+      showMessage("Username already taken.");
+      return;
+    }
+
+    showMessage("Creating account...");
 
     const userCredential = await createUserWithEmailAndPassword(auth, email, password);
     const user = userCredential.user;
 
+    const cleanUsername = username.trim();
+    const usernameLower = normalizeUsername(cleanUsername);
+
     const newUser = {
       uid: user.uid,
-      username,
+      username: cleanUsername,
+      usernameLower,
       email,
       city,
       state,
@@ -150,7 +199,7 @@ form.addEventListener("submit", async (event) => {
 
     localStorage.setItem("currentUser", JSON.stringify(newUser));
 
-    accountMessage.textContent = "Account created successfully!";
+    showMessage("Account created successfully!");
 
     setTimeout(() => {
       window.location.href = "dashboard.html";
@@ -158,6 +207,6 @@ form.addEventListener("submit", async (event) => {
 
   } catch (error) {
     console.error("Create account error:", error);
-    accountMessage.textContent = error.message;
+    showMessage(error.message);
   }
 });
