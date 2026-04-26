@@ -2407,3 +2407,14 @@ textarea {
   align-items: center;
   gap: 10px;
 }
+
+.nav-brand-text {
+  font-family: "Inter", sans-serif !important;
+  font-size: 28px !important;
+  font-weight: 800 !important;
+  line-height: 1 !important;
+  letter-spacing: -0.5px !important;
+  color: #8dffb8 !important;
+  text-shadow: 0 0 18px rgba(141, 255, 184, 0.45) !important;
+  white-space: nowrap !important;
+}
