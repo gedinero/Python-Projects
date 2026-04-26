@@ -1,108 +1,52 @@
-document.addEventListener("DOMContentLoaded", () => {
-    const createAccountBtn = document.getElementById("createAccountBtn");
-    const message = document.getElementById("accountMessage");
-    const countrySelect = document.getElementById("country");
-    const otherCountryInput = document.getElementById("otherCountry");
-    const profilePictureInput = document.getElementById("profilePicture");
-    const profilePreview = document.getElementById("profilePreview");
+// Firebase imports
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-    let profilePictureData = "";
+// Your Firebase config
+const firebaseConfig = {
+  apiKey: "AIzaSyC5RWc2ioyBMUZW7JuSinxEaNu1_GIT3Ls",
+  authDomain: "commish-central.firebaseapp.com",
+  projectId: "commish-central",
+  storageBucket: "commish-central.firebasestorage.app",
+  messagingSenderId: "29514923176",
+  appId: "1:29514923176:web:7fe2fa38287c7feaf2969d",
+  measurementId: "G-FF5PY2HLH8"
+};
 
-    function showMessage(text, color) {
-        if (!message) return;
-        message.textContent = text;
-        message.style.color = color;
-    }
 
-    function setCountryVisibility() {
-        if (!countrySelect || !otherCountryInput) return;
+// Initialize
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
 
-        if (countrySelect.value === "Other") {
-            otherCountryInput.style.display = "block";
-        } else {
-            otherCountryInput.style.display = "none";
-            otherCountryInput.value = "";
-        }
-    }
+// Form submit
+document.getElementById("createAccountForm").addEventListener("submit", async (e) => {
+  e.preventDefault();
 
-    if (countrySelect) {
-        countrySelect.addEventListener("change", setCountryVisibility);
-        setCountryVisibility();
-    }
+  const username = document.getElementById("username").value;
+  const email = document.getElementById("email").value;
+  const password = document.getElementById("password").value;
 
-    if (profilePictureInput) {
-        profilePictureInput.addEventListener("change", (event) => {
-            const file = event.target.files[0];
-            if (!file) return;
+  try {
+    // Create user in Firebase Auth
+    const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+    const user = userCredential.user;
 
-            const reader = new FileReader();
+    // Save extra user info in Firestore
+    await setDoc(doc(db, "users", user.uid), {
+      username: username,
+      email: email,
+      createdAt: new Date()
+    });
 
-            reader.onload = function (e) {
-                profilePictureData = e.target.result || "";
-                if (profilePreview) {
-                    profilePreview.src = profilePictureData;
-                }
-            };
+    console.log("🔥 User created:", user);
 
-            reader.readAsDataURL(file);
-        });
-    }
+    // Redirect after success
+    window.location.href = "dashboard.html";
 
-    if (createAccountBtn) {
-        createAccountBtn.addEventListener("click", () => {
-            const username = document.getElementById("username")?.value.trim() || "";
-            const password = document.getElementById("password")?.value.trim() || "";
-            const city = document.getElementById("city")?.value.trim() || "";
-            const state = document.getElementById("state")?.value.trim() || "";
-
-            let country = countrySelect?.value || "";
-            if (country === "Other") {
-                country = otherCountryInput?.value.trim() || "";
-            }
-
-            const favoriteNFL = document.getElementById("favoriteNFL")?.value || "";
-            const favoriteCollege = document.getElementById("favoriteCollege")?.value || "";
-
-            if (!username || !password || !city || !state || !country || !favoriteNFL || !favoriteCollege) {
-                showMessage("Please fill in all fields.", "#ff5c5c");
-                return;
-            }
-
-            const users = JSON.parse(localStorage.getItem("users")) || [];
-
-            const exists = users.some(
-                (user) => (user.username || "").toLowerCase() === username.toLowerCase()
-            );
-
-            if (exists) {
-                showMessage("Username already exists. Choose another.", "#ff5c5c");
-                return;
-            }
-
-            const newUser = {
-                username,
-                password,
-                city,
-                state,
-                country,
-                favoriteNFL,
-                favoriteCollege,
-                profilePicture: profilePictureData
-            };
-
-            users.push(newUser);
-
-            localStorage.setItem("users", JSON.stringify(users));
-            localStorage.setItem(username, JSON.stringify(newUser));
-            localStorage.setItem("currentUser", username);
-            localStorage.setItem("profileImage", profilePictureData || "");
-            localStorage.setItem("currentUserProfileImage", profilePictureData || "");
-
-            showMessage("Account created successfully!", "#00ff9f");
-
-            setTimeout(() => {
-                window.location.href = "dashboard.html";
-            }, 700);
-        });
-    }
+  } catch (error) {
+    console.error("❌ Error:", error.message);
+    alert(error.message);
+  }
 });
