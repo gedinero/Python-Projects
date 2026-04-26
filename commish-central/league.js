@@ -1,8 +1,30 @@
-document.addEventListener("DOMContentLoaded", () => {
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import {
+  getFirestore,
+  doc,
+  getDoc,
+  updateDoc,
+  serverTimestamp
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyC5RWc2ioyBMUZW7JuSinxEaNu1_GIT3Ls",
+  authDomain: "commish-central.firebaseapp.com",
+  projectId: "commish-central",
+  storageBucket: "commish-central.firebasestorage.app",
+  messagingSenderId: "29514923176",
+  appId: "1:29514923176:web:7fe2fa38287c7feaf2969d",
+  measurementId: "G-FF5PY2HLH8"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+document.addEventListener("DOMContentLoaded", async () => {
   const savedUser = localStorage.getItem("currentUser");
   const selectedLeagueId = localStorage.getItem("selectedLeagueId");
 
-  if (!savedUser) {
+  if (!savedUser || !selectedLeagueId) {
     window.location.href = "index.html";
     return;
   }
@@ -20,9 +42,6 @@ document.addEventListener("DOMContentLoaded", () => {
   const currentUsername = currentUser.username || "Commissioner";
   const currentUserImage = currentUser.profilePicture || "";
 
-  const leagues = JSON.parse(localStorage.getItem("leagues")) || [];
-  const league = leagues.find((item) => String(item.id) === String(selectedLeagueId));
-
   const leagueTitle = document.getElementById("leagueTitle");
   const leagueMeta = document.getElementById("leagueMeta");
   const myLeagueInfo = document.getElementById("myLeagueInfo");
@@ -30,7 +49,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const tabButtons = document.querySelectorAll(".tab-btn");
   const tabPanels = document.querySelectorAll(".tab-panel");
-
   const leagueMenuToggle = document.getElementById("leagueMenuToggle");
   const leagueTabs = document.querySelector(".league-tabs");
 
@@ -100,13 +118,22 @@ document.addEventListener("DOMContentLoaded", () => {
   let selectedDraftUser = null;
   let selectedDraftMode = null;
 
-  if (!league) {
+  const leagueRef = doc(db, "leagues", selectedLeagueId);
+  const leagueSnap = await getDoc(leagueRef);
+
+  if (!leagueSnap.exists()) {
     if (leagueTitle) leagueTitle.textContent = "League Not Found";
     if (leagueMeta) leagueMeta.textContent = "No league data found.";
     return;
   }
 
+  let league = {
+    id: leagueSnap.id,
+    ...leagueSnap.data()
+  };
+
   league.members ||= [league.commissioner || currentUsername];
+  league.memberUids ||= [league.commissionerUid || currentUser.uid];
   league.chatMessages ||= [];
   league.scheduleMessages ||= [];
   league.tradeMessages ||= [];
@@ -116,16 +143,28 @@ document.addEventListener("DOMContentLoaded", () => {
   league.userTeams ||= [];
   league.teamNameOverrides ||= {};
 
+  localStorage.setItem("selectedLeagueId", league.id);
+
   const isCommish =
     league.commissioner === currentUsername ||
     league.commissionerUid === currentUser.uid;
 
-  function saveLeague() {
-    const allLeagues = JSON.parse(localStorage.getItem("leagues")) || [];
-    const updated = allLeagues.map((item) =>
-      String(item.id) === String(league.id) ? league : item
-    );
-    localStorage.setItem("leagues", JSON.stringify(updated));
+  async function saveLeague() {
+    await updateDoc(leagueRef, {
+      members: league.members,
+      memberUids: league.memberUids,
+      chatMessages: league.chatMessages,
+      scheduleMessages: league.scheduleMessages,
+      tradeMessages: league.tradeMessages,
+      rulesText: league.rulesText,
+      newsText: league.newsText,
+      draftOrder: league.draftOrder,
+      userTeams: league.userTeams,
+      teamNameOverrides: league.teamNameOverrides,
+      updatedAt: serverTimestamp()
+    });
+
+    localStorage.setItem("selectedLeagueId", league.id);
   }
 
   function getTimeStamp() {
@@ -168,6 +207,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function renderHeader() {
     if (leagueTitle) leagueTitle.textContent = league.name || "League";
+
     if (leagueMeta) {
       leagueMeta.textContent = `${league.game || "Game"} • ${league.type || "Type"} • Commissioner: ${league.commissioner || currentUsername}`;
     }
@@ -181,7 +221,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function buildMessageBubble(message) {
-    const avatarSrc = getUserProfileImage(message.user);
+    const avatarSrc = message.profilePicture || getUserProfileImage(message.user);
 
     let body = `<div class="messenger-text">${message.text || ""}</div>`;
 
@@ -213,26 +253,28 @@ document.addEventListener("DOMContentLoaded", () => {
     box.scrollTop = box.scrollHeight;
   }
 
-  function addMessage(arrayName, payload, renderFn) {
+  async function addMessage(arrayName, payload, renderFn) {
     league[arrayName].push(payload);
-    saveLeague();
     renderFn();
+    await saveLeague();
   }
 
-  function sendTextMessage(input, arrayName, renderFn) {
+  async function sendTextMessage(input, arrayName, renderFn) {
     if (!input) return;
 
     const text = input.value.trim();
     if (!text) return;
 
-    addMessage(arrayName, {
+    input.value = "";
+
+    await addMessage(arrayName, {
       user: currentUsername,
+      uid: currentUser.uid,
+      profilePicture: currentUser.profilePicture || "",
       text,
       type: "text",
       time: getTimeStamp()
     }, renderFn);
-
-    input.value = "";
   }
 
   function sendImageMessage(fileInput, arrayName, renderFn) {
@@ -241,9 +283,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const reader = new FileReader();
 
-    reader.onload = (event) => {
-      addMessage(arrayName, {
+    reader.onload = async (event) => {
+      await addMessage(arrayName, {
         user: currentUsername,
+        uid: currentUser.uid,
+        profilePicture: currentUser.profilePicture || "",
         image: event.target.result,
         type: "image",
         time: getTimeStamp()
@@ -256,49 +300,43 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function setupTypingIndicator(input, indicator) {
-  if (!input || !indicator) return;
+    if (!input || !indicator) return;
 
-  const avatarSrc = currentUser.profilePicture && currentUser.profilePicture.trim() !== ""
-    ? currentUser.profilePicture
-    : getDefaultAvatar(currentUsername);
+    const avatarSrc = currentUser.profilePicture && currentUser.profilePicture.trim() !== ""
+      ? currentUser.profilePicture
+      : getDefaultAvatar(currentUsername);
 
-  indicator.innerHTML = `
-    <div style="display:flex; align-items:center; gap:10px;">
-      <img
-        src="${avatarSrc}"
-        alt="${currentUsername}"
-        style="
-          display:block;
-          width:36px;
-          height:36px;
-          min-width:36px;
-          border-radius:50%;
-          object-fit:cover;
-          border:2px solid rgba(141,255,184,0.85);
-        "
-      >
+    indicator.innerHTML = `
+      <div style="display:flex; align-items:center; gap:10px;">
+        <img
+          src="${avatarSrc}"
+          alt="${currentUsername}"
+          style="display:block; width:36px; height:36px; min-width:36px; border-radius:50%; object-fit:cover; border:2px solid rgba(141,255,184,0.85);"
+        >
 
-      <div class="typing-bubble">
-        <span></span>
-        <span></span>
-        <span></span>
+        <div class="typing-bubble">
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
       </div>
-    </div>
-  `;
+    `;
 
-  let timer;
+    indicator.style.display = "none";
 
-  input.addEventListener("input", () => {
-    indicator.style.display = "flex";
-    indicator.style.margin = "10px 0 10px 12px";
+    let timer;
 
-    clearTimeout(timer);
+    input.addEventListener("input", () => {
+      indicator.style.display = "flex";
+      indicator.style.margin = "10px 0 10px 12px";
 
-    timer = setTimeout(() => {
-      indicator.style.display = "none";
-    }, 1000);
-  });
-}
+      clearTimeout(timer);
+
+      timer = setTimeout(() => {
+        indicator.style.display = "none";
+      }, 1000);
+    });
+  }
 
   function setupEmoji(toggleBtn, wrap, grid, input) {
     if (!toggleBtn || !wrap || !grid || !input) return;
@@ -367,10 +405,12 @@ document.addEventListener("DOMContentLoaded", () => {
     if (selectedDraftUserText) selectedDraftUserText.textContent = selectedDraftUser || "None";
 
     if (playersList) {
-      playersList.innerHTML = league.members.map((member) => {
-        const pick = getUserPick(member);
-        return `<div class="draft-item">${pick ? `${member} • ${getDisplayTeamName(pick.team)}` : member}</div>`;
-      }).join("");
+      playersList.innerHTML = league.members.length
+        ? league.members.map((member) => {
+            const pick = getUserPick(member);
+            return `<div class="draft-item">${pick ? `${member} • ${getDisplayTeamName(pick.team)}` : member}</div>`;
+          }).join("")
+        : `<p class="empty-text">No players in league yet.</p>`;
     }
 
     if (draftOrderList) {
@@ -394,11 +434,15 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     if (cpuTeamsList) {
-      cpuTeamsList.innerHTML = getCpuTeams().map((team) => `
-        <div class="draft-item cpu-team-item" data-team="${team}">
-          ${getDisplayTeamName(team)}
-        </div>
-      `).join("");
+      const cpuTeams = getCpuTeams();
+
+      cpuTeamsList.innerHTML = cpuTeams.length
+        ? cpuTeams.map((team) => `
+          <div class="draft-item cpu-team-item" data-team="${team}">
+            ${getDisplayTeamName(team)}
+          </div>
+        `).join("")
+        : `<p class="empty-text">No CPU teams available.</p>`;
     }
 
     wireDraftClicks();
@@ -412,7 +456,11 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     if (draftSummaryCpuTeams) {
-      draftSummaryCpuTeams.innerHTML = getCpuTeams().map((team) => `<div class="draft-item">${getDisplayTeamName(team)}</div>`).join("");
+      const cpuTeams = getCpuTeams();
+
+      draftSummaryCpuTeams.innerHTML = cpuTeams.length
+        ? cpuTeams.map((team) => `<div class="draft-item">${getDisplayTeamName(team)}</div>`).join("")
+        : `<p class="empty-text">No CPU teams left.</p>`;
     }
   }
 
@@ -436,7 +484,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     document.querySelectorAll(".cpu-team-item").forEach((item) => {
-      item.addEventListener("click", () => {
+      item.addEventListener("click", async () => {
         if (!isCommish || !selectedDraftUser) return;
 
         const existingIndex = league.userTeams.findIndex((pick) => pick.user === selectedDraftUser);
@@ -452,10 +500,10 @@ document.addEventListener("DOMContentLoaded", () => {
         selectedDraftUser = null;
         selectedDraftMode = null;
 
-        saveLeague();
         renderHeader();
         renderDraft();
         renderDraftSummary();
+        await saveLeague();
       });
     });
   }
@@ -482,6 +530,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (customTeamNamesList) {
       const names = Object.keys(league.teamNameOverrides);
+
       customTeamNamesList.innerHTML = names.length
         ? names.map((team) => `<div class="draft-item"><strong>${team}</strong> → ${league.teamNameOverrides[team]}</div>`).join("")
         : `<p class="empty-text">No custom team names yet.</p>`;
@@ -489,22 +538,22 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   leagueMenuToggle?.addEventListener("click", () => {
-  leagueTabs?.classList.toggle("open");
-});
-
-tabButtons.forEach((button) => {
-  button.addEventListener("click", () => {
-    tabButtons.forEach((btn) => btn.classList.remove("active"));
-    tabPanels.forEach((panel) => panel.classList.remove("active"));
-
-    button.classList.add("active");
-    document.getElementById(button.dataset.tab)?.classList.add("active");
-
-    if (window.innerWidth <= 768) {
-      leagueTabs?.classList.remove("open");
-    }
+    leagueTabs?.classList.toggle("open");
   });
-});
+
+  tabButtons.forEach((button) => {
+    button.addEventListener("click", () => {
+      tabButtons.forEach((btn) => btn.classList.remove("active"));
+      tabPanels.forEach((panel) => panel.classList.remove("active"));
+
+      button.classList.add("active");
+      document.getElementById(button.dataset.tab)?.classList.add("active");
+
+      if (window.innerWidth <= 768) {
+        leagueTabs?.classList.remove("open");
+      }
+    });
+  });
 
   logoutBtn?.addEventListener("click", (event) => {
     event.preventDefault();
@@ -533,33 +582,33 @@ tabButtons.forEach((button) => {
   scheduleImageInput?.addEventListener("change", () => sendImageMessage(scheduleImageInput, "scheduleMessages", renderSchedule));
   tradeImageInput?.addEventListener("change", () => sendImageMessage(tradeImageInput, "tradeMessages", renderTrade));
 
-  saveRulesBtn?.addEventListener("click", () => {
+  saveRulesBtn?.addEventListener("click", async () => {
     league.rulesText = rulesInput.value.trim();
-    saveLeague();
     renderRules();
+    await saveLeague();
   });
 
-  saveNewsBtn?.addEventListener("click", () => {
+  saveNewsBtn?.addEventListener("click", async () => {
     league.newsText = newsInput.value.trim();
-    saveLeague();
     renderNews();
+    await saveLeague();
   });
 
-  randomizeOrderBtn?.addEventListener("click", () => {
+  randomizeOrderBtn?.addEventListener("click", async () => {
     league.draftOrder = [...league.members].sort(() => Math.random() - 0.5);
     league.userTeams = [];
-    saveLeague();
     renderDraft();
     renderDraftSummary();
+    await saveLeague();
   });
 
-  resetDraftBtn?.addEventListener("click", () => {
+  resetDraftBtn?.addEventListener("click", async () => {
     if (!confirm("Reset the draft?")) return;
     league.draftOrder = [];
     league.userTeams = [];
-    saveLeague();
     renderDraft();
     renderDraftSummary();
+    await saveLeague();
   });
 
   clearSelectedUserBtn?.addEventListener("click", () => {
@@ -568,7 +617,7 @@ tabButtons.forEach((button) => {
     renderDraft();
   });
 
-  saveRelocationBtn?.addEventListener("click", () => {
+  saveRelocationBtn?.addEventListener("click", async () => {
     const team = relocateTeamSelect.value;
     const newName = relocateNameInput.value.trim();
 
@@ -579,11 +628,13 @@ tabButtons.forEach((button) => {
 
     league.teamNameOverrides[team] = newName;
     relocateNameInput.value = "";
-    saveLeague();
+
     renderSettings();
     renderDraft();
     renderDraftSummary();
     renderHeader();
+
+    await saveLeague();
   });
 
   setupEmoji(chatEmojiToggleBtn, chatEmojiPickerWrap, chatEmojiGrid, chatInput);
