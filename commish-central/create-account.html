@@ -51,6 +51,22 @@
 
           <label for="profilePicture" class="upload-photo-btn">Upload Profile Picture</label>
           <input type="file" id="profilePicture" accept="image/*" style="display:none;">
+
+          <div id="cropControls" class="crop-controls" style="display:none; width:100%; max-width:320px; margin-top:12px;">
+            <label for="zoomRange" style="display:block; margin-bottom:8px; font-weight:700;">
+              Adjust Profile Picture
+            </label>
+
+            <input
+              type="range"
+              id="zoomRange"
+              min="1"
+              max="3"
+              step="0.05"
+              value="1"
+              style="width:100%;"
+            >
+          </div>
         </div>
 
         <input type="text" id="username" name="username" placeholder="Username" autocomplete="username" required>

@@ -12,7 +12,6 @@ const firebaseConfig = {
   measurementId: "G-FF5PY2HLH8"
 };
 
-
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
@@ -22,32 +21,81 @@ const accountMessage = document.getElementById("accountMessage");
 
 const profilePictureInput = document.getElementById("profilePicture");
 const profilePreview = document.getElementById("profilePreview");
+const zoomRange = document.getElementById("zoomRange");
+const cropControls = document.getElementById("cropControls");
+
 const countrySelect = document.getElementById("country");
 const otherCountryInput = document.getElementById("otherCountry");
 
 let profilePictureData = "";
+let originalImage = null;
+
+function cropImageToSquare(img, zoom = 1) {
+  const canvas = document.createElement("canvas");
+  const size = 400;
+
+  canvas.width = size;
+  canvas.height = size;
+
+  const ctx = canvas.getContext("2d");
+
+  const minSide = Math.min(img.width, img.height);
+  const cropSize = minSide / zoom;
+  const sx = (img.width - cropSize) / 2;
+  const sy = (img.height - cropSize) / 2;
+
+  ctx.drawImage(img, sx, sy, cropSize, cropSize, 0, 0, size, size);
+
+  return canvas.toDataURL("image/jpeg", 0.92);
+}
+
+function updatePreviewFromZoom() {
+  if (!originalImage || !zoomRange || !profilePreview) return;
+
+  const zoom = parseFloat(zoomRange.value || "1");
+  profilePictureData = cropImageToSquare(originalImage, zoom);
+
+  profilePreview.src = profilePictureData;
+  profilePreview.style.display = "block";
+}
 
 if (profilePictureInput) {
   profilePictureInput.addEventListener("change", () => {
     const file = profilePictureInput.files[0];
-
     if (!file) return;
 
     const reader = new FileReader();
 
-    reader.onload = () => {
-      profilePictureData = reader.result;
-      profilePreview.src = profilePictureData;
-      profilePreview.style.display = "block";
+    reader.onload = (event) => {
+      const img = new Image();
+
+      img.onload = () => {
+        originalImage = img;
+
+        if (cropControls) cropControls.style.display = "block";
+        if (zoomRange) zoomRange.value = "1";
+
+        updatePreviewFromZoom();
+      };
+
+      img.src = event.target.result;
     };
 
     reader.readAsDataURL(file);
   });
 }
 
+if (zoomRange) {
+  zoomRange.addEventListener("input", updatePreviewFromZoom);
+}
+
 if (countrySelect && otherCountryInput) {
   countrySelect.addEventListener("change", () => {
     otherCountryInput.style.display = countrySelect.value === "Other" ? "block" : "none";
+
+    if (countrySelect.value !== "Other") {
+      otherCountryInput.value = "";
+    }
   });
 }
 
@@ -59,6 +107,7 @@ form.addEventListener("submit", async (event) => {
   const password = document.getElementById("password").value;
   const city = document.getElementById("city").value.trim();
   const state = document.getElementById("state").value.trim();
+
   const country = countrySelect.value === "Other"
     ? otherCountryInput.value.trim()
     : countrySelect.value;
@@ -82,20 +131,7 @@ form.addEventListener("submit", async (event) => {
     const userCredential = await createUserWithEmailAndPassword(auth, email, password);
     const user = userCredential.user;
 
-    await setDoc(doc(db, "users", user.uid), {
-      uid: user.uid,
-      username,
-      email,
-      city,
-      state,
-      country,
-      favoriteNFL,
-      favoriteCollege,
-      profilePicture: profilePictureData,
-      createdAt: serverTimestamp()
-    });
-
-    localStorage.setItem("currentUser", JSON.stringify({
+    const newUser = {
       uid: user.uid,
       username,
       email,
@@ -105,7 +141,14 @@ form.addEventListener("submit", async (event) => {
       favoriteNFL,
       favoriteCollege,
       profilePicture: profilePictureData
-    }));
+    };
+
+    await setDoc(doc(db, "users", user.uid), {
+      ...newUser,
+      createdAt: serverTimestamp()
+    });
+
+    localStorage.setItem("currentUser", JSON.stringify(newUser));
 
     accountMessage.textContent = "Account created successfully!";
 

@@ -1,71 +1,50 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Commish Central</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800;900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Commish Central</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
-    <div class="dashboard-page auth-page">
+  <div class="dashboard-page auth-page">
 
-        <main class="dashboard-container auth-container">
+    <main class="dashboard-container auth-container">
 
-            <section class="dashboard-hero auth-hero">
-                <p class="eyebrow">Commish Central</p>
-                <h1>Welcome Back</h1>
-                <p class="dashboard-subtext">
-                    Run leagues without the chaos.
-                </p>
-            </section>
+      <section class="dashboard-hero auth-hero">
+        <p class="eyebrow">Commish Central</p>
+        <h1>Welcome Back</h1>
+        <p class="dashboard-subtext">
+          Run leagues without the chaos.
+        </p>
+      </section>
 
-            <section class="profile-card auth-card">
-                <div class="profile-header auth-card-header">
-                    <h2>Login</h2>
-                </div>
+      <section class="profile-card auth-card">
+        <div class="profile-header auth-card-header">
+          <h2>Login</h2>
+        </div>
 
-                <div class="form-stack">
-                    <input type="text" id="loginUsername" placeholder="Username">
-                    <input type="password" id="loginPassword" placeholder="Password">
-                </div>
+        <div class="form-stack">
+          <input type="email" id="username" placeholder="Email">
+          <input type="password" id="password" placeholder="Password">
+        </div>
 
-                <p id="loginMessage" class="league-message"></p>
+        <p id="loginMessage" class="league-message"></p>
 
-                <div class="auth-actions">
-                    <button id="loginBtn" class="primary-btn">Login</button>
-                    <span class="auth-divider">or</span>
-                    <a href="create-account.html" class="secondary-btn link-btn">Create Account</a>
-                </div>
-            </section>
+        <div class="auth-actions">
+          <button type="button" id="loginBtn" class="primary-btn">Login</button>
+          <span class="auth-divider">or</span>
+          <a href="create-account.html" class="secondary-btn link-btn">Create Account</a>
+        </div>
+      </section>
 
-        </main>
+    </main>
 
-    </div>
+  </div>
 
-    
-    <!-- Firebase SDK -->
-<script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-  import { getFirestore } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-
-  const firebaseConfig = {
-    apiKey: "AIzaSyCF5RwC2i0yBMU7VJusinXeAuL_GIT3Ls",
-    authDomain: "commish-central.firebaseapp.com",
-    projectId: "commish-central",
-    storageBucket: "commish-central.appspot.com",
-    messagingSenderId: "29514923176",
-    appId: "1:29514923176:web:7fe2fa38287c7feaf2969d",
-  measurementId: "G-FF5PY2HLH8"
-  };
-
-  const app = initializeApp(firebaseConfig);
-  const db = getFirestore(app);
-
-  // Test connection
-  console.log("🔥 Firebase Connected:", app);
-</script>
-
-<script src="auth.js"></script>
+  <script type="module" src="script.js"></script>
 </body>
 </html>

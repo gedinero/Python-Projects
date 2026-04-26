@@ -1,81 +1,67 @@
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
 const firebaseConfig = {
-  apiKey: "AIzaSy...",
-  authDomain: "commishcentral.firebaseapp.com",
-  projectId: "commishcentral",
-  storageBucket: "commishcentral.firebasestorage.app",
-  messagingSenderId: "1004557081539",
-  appId: "1:1004557081539:web:ec1b4db908294ed18ffb76"
+  apiKey: "AIzaSyC5RWc2ioyBMUZW7JuSinxEaNu1_GIT3Ls",
+  authDomain: "commish-central.firebaseapp.com",
+  projectId: "commish-central",
+  storageBucket: "commish-central.firebasestorage.app",
+  messagingSenderId: "29514923176",
+  appId: "1:29514923176:web:7fe2fa38287c7feaf2969d",
+  measurementId: "G-FF5PY2HLH8"
 };
 
-firebase.initializeApp(firebaseConfig);
-const db = firebase.firestore();
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
 
-function createLeague() {
-  const name = document.getElementById("leagueName").value.trim();
+document.addEventListener("DOMContentLoaded", () => {
+  const loginBtn = document.getElementById("loginBtn");
+  const emailInput = document.getElementById("username");
+  const passwordInput = document.getElementById("password");
 
-  if (!name) {
-    alert("Enter a league name first.");
-    return;
-  }
+  loginBtn?.addEventListener("click", async (event) => {
+    event.preventDefault();
 
-  db.collection("drafts").add({
-    name: name,
-    currentPick: 1,
-    status: "waiting"
-  })
-  .then(() => {
-    alert("League Created 🔥");
-    document.getElementById("leagueName").value = "";
-    loadLeagues();
-  })
-  .catch((error) => {
-    console.error("Error:", error);
-    alert("Something went wrong. Check console.");
+    const email = emailInput.value.trim();
+    const password = passwordInput.value;
+
+    if (!email || !password) {
+      alert("Please enter email and password.");
+      return;
+    }
+
+    try {
+      const userCredential = await signInWithEmailAndPassword(auth, email, password);
+      const user = userCredential.user;
+
+      const userSnap = await getDoc(doc(db, "users", user.uid));
+
+      if (!userSnap.exists()) {
+        alert("User profile not found in Firestore.");
+        return;
+      }
+
+      const userData = userSnap.data();
+
+      localStorage.setItem("currentUser", JSON.stringify({
+        uid: user.uid,
+        username: userData.username || "",
+        email: user.email,
+        city: userData.city || "",
+        state: userData.state || "",
+        country: userData.country || "",
+        favoriteNFL: userData.favoriteNFL || "",
+        favoriteCollege: userData.favoriteCollege || "",
+        profilePicture: userData.profilePicture || ""
+      }));
+
+      window.location.href = "dashboard.html";
+
+    } catch (error) {
+      console.error("Login error:", error);
+      alert(error.message);
+    }
   });
-}
-
-function loadLeagues() {
-  const list = document.getElementById("leagueList");
-  list.innerHTML = "";
-
-  db.collection("drafts").get().then((snapshot) => {
-    snapshot.forEach((doc) => {
-      const data = doc.data();
-
-      const card = document.createElement("div");
-      card.style.border = "1px solid #ccc";
-      card.style.padding = "10px";
-      card.style.marginTop = "10px";
-      card.style.width = "300px";
-
-      const title = document.createElement("h3");
-      title.textContent = data.name;
-
-      const info = document.createElement("p");
-      info.textContent = `Picks: ${data.currentPick} | Status: ${data.status}`;
-
-      const deleteBtn = document.createElement("button");
-      deleteBtn.textContent = "Delete";
-      deleteBtn.onclick = function () {
-        deleteLeague(doc.id);
-      };
-
-      card.appendChild(title);
-      card.appendChild(info);
-      card.appendChild(deleteBtn);
-
-      list.appendChild(card);
-    });
-  });
-}
-
-function deleteLeague(id) {
-  db.collection("drafts").doc(id).delete()
-    .then(() => {
-      alert("League deleted");
-      loadLeagues();
-    })
-    .catch((error) => {
-      console.error("Error deleting league:", error);
-    });
-}
+});
