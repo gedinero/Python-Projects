@@ -2438,3 +2438,43 @@ textarea {
   line-height: 1 !important;
   white-space: nowrap !important;
 }
+
+.top-nav {
+  width: 100%;
+  padding: 22px 6%;
+}
+
+.top-nav-inner {
+  width: 100%;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+}
+
+.brand-wrap {
+  display: flex !important;
+  align-items: center !important;
+  gap: 18px !important;
+}
+
+.brand-logo {
+  width: 70px !important;
+  height: auto !important;
+  display: block !important;
+}
+
+.brand-name {
+  font-family: "Inter", sans-serif !important;
+  font-size: 28px !important;
+  font-weight: 800 !important;
+  line-height: 1 !important;
+  color: #8dffb8 !important;
+  white-space: nowrap !important;
+  text-shadow: 0 0 16px rgba(141, 255, 184, 0.45) !important;
+}
+
+.nav-links {
+  display: flex !important;
+  align-items: center !important;
+  gap: 28px !important;
+}
