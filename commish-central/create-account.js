@@ -3,14 +3,15 @@ import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com
 import { getFirestore, doc, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyC5FRwC2i0yBMU7VJusinXeAuL_GIT3Ls",
+  apiKey: "AIzaSyC5RWc2ioyBMUZW7JuSinxEaNu1_GIT3Ls",
   authDomain: "commish-central.firebaseapp.com",
   projectId: "commish-central",
-  storageBucket: "commish-central.appspot.com",
+  storageBucket: "commish-central.firebasestorage.app",
   messagingSenderId: "29514923176",
   appId: "1:29514923176:web:7fe2fa38287c7feaf2969d",
-  measurementId: "G-FFSPY2HLH8"
+  measurementId: "G-FF5PY2HLH8"
 };
+
 
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
