@@ -2500,3 +2500,82 @@ textarea {
   display: flex;
   gap: 25px;
 }
+
+/* =========================
+   CLEAN HEADER SYSTEM (FINAL)
+   This overrides all old header conflicts
+========================= */
+
+/* kill old systems */
+.topbar,
+.topnav,
+.brand,
+.logo-text,
+.nav-brand-text,
+.site-logo {
+  all: unset;
+}
+
+/* main nav container */
+.top-nav {
+  width: min(var(--max-width), calc(100% - 40px));
+  margin: 18px auto 0 auto;
+  padding: 18px 24px;
+  border-radius: 24px;
+  background: rgba(12, 18, 29, 0.92);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  box-shadow: var(--shadow);
+}
+
+/* layout */
+.top-nav-inner {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 20px !important;
+}
+
+/* logo + text group */
+.brand-wrap {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+/* logo image */
+.brand-logo {
+  width: 60px;
+  height: auto;
+  display: block;
+}
+
+/* ONLY text style that exists now */
+.brand-name {
+  font-family: Inter, Arial, sans-serif;
+  font-size: 26px;
+  font-weight: 900;
+  letter-spacing: -0.04em;
+  color: var(--accent);
+  text-shadow: 0 0 18px rgba(98, 245, 157, 0.25);
+  line-height: 1;
+  white-space: nowrap;
+}
+
+/* nav links */
+.nav-links {
+  display: flex !important;
+  align-items: center !important;
+  gap: 22px !important;
+  flex-wrap: wrap;
+}
+
+.nav-links a {
+  color: var(--text-main);
+  text-decoration: none;
+  font-weight: 800;
+  font-size: 1rem;
+}
+
+.nav-links a:hover {
+  color: var(--accent);
+}
