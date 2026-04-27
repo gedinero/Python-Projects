@@ -2490,3 +2490,39 @@ textarea {
   }
 
 }
+
+/* FORCE CENTER HEADER ON MOBILE */
+@media (max-width: 768px) {
+
+  .top-nav-inner {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    text-align: center !important;
+  }
+
+  .brand {
+    width: 100% !important;
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+  }
+
+  .brand img {
+    margin: 0 auto !important;
+  }
+
+  .brand-text {
+    text-align: center !important;
+  }
+
+  .nav-links {
+    width: 100% !important;
+    display: flex !important;
+    justify-content: center !important;
+    flex-wrap: wrap !important;
+    margin-top: 6px !important;
+  }
+
+}
