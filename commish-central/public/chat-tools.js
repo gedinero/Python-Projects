@@ -1,18 +1,34 @@
 // FILE: chat-tools.js
-// Handles BOTH emojis and GIFs for Commish Central
+// Handles emojis + GIFs for Commish Central league chat
 
 document.addEventListener("DOMContentLoaded", () => {
-  const emojiBtn = document.getElementById("emojiBtn");
-  const gifBtn = document.getElementById("gifBtn");
-  const emojiPicker = document.getElementById("emojiPicker");
-  const gifPicker = document.getElementById("gifPicker");
-  const messageInput = document.getElementById("messageInput");
+  const emojiBtn = document.getElementById("chatEmojiToggleBtn");
+  const gifBtn = document.getElementById("gifToggleBtn");
 
-  // Paste your GIPHY API key between the quotes below
-  const GIPHY_API_KEY = "fAamOwF84swNA9O56F0l3hz1G7huYaA1";
+  const emojiPicker = document.getElementById("chatEmojiPickerWrap");
+  const emojiGrid = document.getElementById("chatEmojiGrid");
 
-  if (!emojiBtn || !gifBtn || !emojiPicker || !gifPicker || !messageInput) {
-    console.warn("chat-tools.js: Missing emojiBtn, gifBtn, emojiPicker, gifPicker, or messageInput.");
+  const gifPicker = document.getElementById("gifPickerWrap");
+  const gifSearchInput = document.getElementById("gifSearchInput");
+  const gifSearchBtn = document.getElementById("gifSearchBtn");
+  const gifResultsGrid = document.getElementById("gifResultsGrid");
+
+  const messageInput = document.getElementById("chatInput");
+
+  const GIPHY_API_KEY = "PASTE_YOUR_GIPHY_KEY_HERE";
+
+  if (
+    !emojiBtn ||
+    !gifBtn ||
+    !emojiPicker ||
+    !emojiGrid ||
+    !gifPicker ||
+    !gifSearchInput ||
+    !gifSearchBtn ||
+    !gifResultsGrid ||
+    !messageInput
+  ) {
+    console.warn("chat-tools.js: One or more chat elements were not found.");
     return;
   }
 
@@ -21,41 +37,35 @@ document.addEventListener("DOMContentLoaded", () => {
     "😊", "😎", "🥶", "😤", "😮‍💨", "😈", "👀", "🙌",
     "👏", "👍", "👎", "🤝", "🙏", "💪", "🔥", "💯",
     "❤️", "🖤", "💚", "💙", "💜", "💛", "🧡", "🤍",
-    "💍", "👑", "🏆", "⚡", "🌟", "✨", "💫", "🚀",
-    "🏈", "🎮", "🎯", "📈", "💰", "🧠", "🗣️", "😬",
-    "😡", "🤦🏾‍♂️", "🤷🏾‍♂️", "🙋🏾‍♂️", "👊🏾", "✊🏾",
-    "👨🏾‍💻", "🕹️", "🏟️", "📣", "🧢", "🥳"
+    "💍", "💎", "👑", "🏆", "⚡", "🌟", "✨", "💫",
+    "🚀", "🏈", "🎮", "🎯", "📈", "💰", "🧠", "🗣️",
+    "😬", "😡", "🤦🏾‍♂️", "🤷🏾‍♂️", "🙋🏾‍♂️", "👊🏾",
+    "✊🏾", "👨🏾‍💻", "🕹️", "🏟️", "📣", "🧢", "🥳"
   ];
 
-  function closeAllPickers() {
-    emojiPicker.classList.add("hidden");
-    gifPicker.classList.add("hidden");
-  }
-
-  // Build emoji picker
-  emojiPicker.innerHTML = emojis
-    .map((emoji) => {
-      return `<button type="button" class="emoji-option">${emoji}</button>`;
-    })
+  emojiGrid.innerHTML = emojis
+    .map((emoji) => `<button type="button" class="emoji-option">${emoji}</button>`)
     .join("");
 
-  // Emoji button
+  function closeAllPickers() {
+    emojiPicker.style.display = "none";
+    gifPicker.style.display = "none";
+  }
+
   emojiBtn.addEventListener("click", (event) => {
     event.preventDefault();
     event.stopPropagation();
 
-    const emojiWasHidden = emojiPicker.classList.contains("hidden");
+    const isOpen = emojiPicker.style.display === "block";
     closeAllPickers();
 
-    if (emojiWasHidden) {
-      emojiPicker.classList.remove("hidden");
+    if (!isOpen) {
+      emojiPicker.style.display = "block";
     }
   });
 
-  // Add emoji to message input
-  emojiPicker.addEventListener("click", (event) => {
+  emojiGrid.addEventListener("click", (event) => {
     const emojiButton = event.target.closest(".emoji-option");
-
     if (!emojiButton) return;
 
     event.preventDefault();
@@ -65,42 +75,32 @@ document.addEventListener("DOMContentLoaded", () => {
     messageInput.focus();
   });
 
-  // GIF button
   gifBtn.addEventListener("click", async (event) => {
     event.preventDefault();
     event.stopPropagation();
 
-    const gifWasHidden = gifPicker.classList.contains("hidden");
+    const isOpen = gifPicker.style.display === "block";
     closeAllPickers();
 
-    if (gifWasHidden) {
-      gifPicker.classList.remove("hidden");
-      buildGifPicker();
+    if (!isOpen) {
+      gifPicker.style.display = "block";
       await loadTrendingGifs();
     }
   });
 
-  function buildGifPicker() {
-    gifPicker.innerHTML = `
-      <div class="gif-search-box">
-        <input 
-          type="text" 
-          id="gifSearchInput" 
-          placeholder="Search GIFs..." 
-          autocomplete="off"
-        >
-        <button type="button" id="gifSearchBtn">Search</button>
-      </div>
+  gifSearchBtn.addEventListener("click", async (event) => {
+    event.preventDefault();
+    event.stopPropagation();
 
-      <div id="gifResults" class="gif-results">
-        <p class="gif-loading-text">Loading GIFs...</p>
-      </div>
-    `;
+    const searchTerm = gifSearchInput.value.trim();
 
-    const gifSearchInput = document.getElementById("gifSearchInput");
-    const gifSearchBtn = document.getElementById("gifSearchBtn");
+    if (searchTerm) {
+      await searchGifs(searchTerm);
+    }
+  });
 
-    gifSearchBtn.addEventListener("click", async (event) => {
+  gifSearchInput.addEventListener("keydown", async (event) => {
+    if (event.key === "Enter") {
       event.preventDefault();
       event.stopPropagation();
 
@@ -109,52 +109,33 @@ document.addEventListener("DOMContentLoaded", () => {
       if (searchTerm) {
         await searchGifs(searchTerm);
       }
-    });
-
-    gifSearchInput.addEventListener("keydown", async (event) => {
-      if (event.key === "Enter") {
-        event.preventDefault();
-        event.stopPropagation();
-
-        const searchTerm = gifSearchInput.value.trim();
-
-        if (searchTerm) {
-          await searchGifs(searchTerm);
-        }
-      }
-    });
-  }
+    }
+  });
 
   async function loadTrendingGifs() {
-    const url = `https://api.giphy.com/v1/gifs/trending?api_key=${fAamOwF84swNA9O56F0l3hz1G7huYaA1}&limit=12&rating=pg-13`;
-
+    const url = `https://api.giphy.com/v1/gifs/trending?api_key=${GIPHY_API_KEY}&limit=12&rating=pg-13`;
     await fetchAndRenderGifs(url);
   }
 
   async function searchGifs(searchTerm) {
     const encodedSearch = encodeURIComponent(searchTerm);
-    const url = `https://api.giphy.com/v1/gifs/search?api_key=${fAamOwF84swNA9O56F0l3hz1G7huYaA1}&q=${encodedSearch}&limit=12&rating=pg-13`;
-
+    const url = `https://api.giphy.com/v1/gifs/search?api_key=${GIPHY_API_KEY}&q=${encodedSearch}&limit=12&rating=pg-13`;
     await fetchAndRenderGifs(url);
   }
 
   async function fetchAndRenderGifs(url) {
-    const gifResults = document.getElementById("gifResults");
-
-    if (!gifResults) return;
-
-    gifResults.innerHTML = `<p class="gif-loading-text">Loading GIFs...</p>`;
+    gifResultsGrid.innerHTML = `<p class="gif-loading-text">Loading GIFs...</p>`;
 
     try {
       const response = await fetch(url);
       const data = await response.json();
 
       if (!data.data || data.data.length === 0) {
-        gifResults.innerHTML = `<p class="gif-loading-text">No GIFs found.</p>`;
+        gifResultsGrid.innerHTML = `<p class="gif-loading-text">No GIFs found.</p>`;
         return;
       }
 
-      gifResults.innerHTML = data.data
+      gifResultsGrid.innerHTML = data.data
         .map((gif) => {
           const gifUrl = gif.images.fixed_height.url;
           const gifTitle = gif.title || "GIF";
@@ -170,31 +151,29 @@ document.addEventListener("DOMContentLoaded", () => {
         })
         .join("");
 
-      const gifImages = gifResults.querySelectorAll(".gif-result-img");
-
-      gifImages.forEach((gifImage) => {
+      gifResultsGrid.querySelectorAll(".gif-result-img").forEach((gifImage) => {
         gifImage.addEventListener("click", (event) => {
           event.preventDefault();
           event.stopPropagation();
 
-          const selectedGifUrl = gifImage.dataset.gifUrl;
-
-          messageInput.value += ` ${selectedGifUrl}`;
+          messageInput.value += ` ${gifImage.dataset.gifUrl}`;
           messageInput.focus();
 
-          gifPicker.classList.add("hidden");
+          gifPicker.style.display = "none";
         });
       });
     } catch (error) {
       console.error("GIF fetch error:", error);
-      gifResults.innerHTML = `<p class="gif-loading-text">Could not load GIFs.</p>`;
+      gifResultsGrid.innerHTML = `<p class="gif-loading-text">Could not load GIFs.</p>`;
     }
   }
 
-  // Close pickers when clicking away
   document.addEventListener("click", (event) => {
-    const clickedEmojiArea = emojiPicker.contains(event.target) || event.target === emojiBtn;
-    const clickedGifArea = gifPicker.contains(event.target) || event.target === gifBtn;
+    const clickedEmojiArea =
+      emojiPicker.contains(event.target) || event.target === emojiBtn;
+
+    const clickedGifArea =
+      gifPicker.contains(event.target) || event.target === gifBtn;
 
     if (!clickedEmojiArea && !clickedGifArea) {
       closeAllPickers();
