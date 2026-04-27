@@ -2364,10 +2364,7 @@ textarea {
   }
 }
 
-
-/* FINAL MOBILE NAV FIX (clean, no conflicts) */
 @media screen and (max-width: 900px) {
-
   .top-nav-inner {
     display: flex;
     flex-direction: column;
@@ -2376,11 +2373,33 @@ textarea {
   }
 
   .brand {
-    display: flex;
+    display: grid;
+    grid-template-columns: 24px auto;
     align-items: center;
     justify-content: center;
-    gap: 8px;
-    margin-bottom: 10px;
+    column-gap: 8px;
+    width: 100%;
+    margin: 0 auto 10px auto;
+    text-align: center;
+  }
+
+  .brand img {
+    width: 24px !important;
+    height: 24px !important;
+    max-width: 24px !important;
+    max-height: 24px !important;
+    min-width: 24px !important;
+    min-height: 24px !important;
+    object-fit: contain !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    display: block !important;
+  }
+
+  .brand-text {
+    margin: 0 !important;
+    padding: 0 !important;
+    white-space: nowrap;
   }
 
   .nav-links {
@@ -2390,5 +2409,4 @@ textarea {
     gap: 16px;
     width: 100%;
   }
-
 }
