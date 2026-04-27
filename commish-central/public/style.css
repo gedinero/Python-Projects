@@ -2330,6 +2330,16 @@ textarea {
   display: none;
 }
 
+@media screen and (max-width: 900px) {
+  .league-tabs {
+    display: none;
+  }
+
+  .league-tabs.open {
+    display: grid;
+  }
+}
+
 @media (max-width: 768px) {
   .league-menu-toggle {
     display: block;
@@ -2363,6 +2373,21 @@ textarea {
     font-size: 1rem;
   }
 }
+
+@media (max-width: 768px) {
+  .league-tabs {
+    display: none !important;
+  }
+
+  .league-tabs.open {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 10px !important;
+    width: calc(100% - 32px) !important;
+    margin: 0 auto 18px !important;
+  }
+}
+
 
 @media screen and (max-width: 900px) {
   .top-nav-inner {
