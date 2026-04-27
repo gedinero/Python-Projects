@@ -2463,3 +2463,30 @@ textarea {
   display: inline-block !important;
   flex: 0 0 24px !important;
 }
+
+@media (max-width: 768px) {
+
+  .top-nav-inner {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    text-align: center !important;
+  }
+
+  .brand {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: 100% !important;
+  }
+
+  .nav-links {
+    display: flex !important;
+    justify-content: center !important;
+    flex-wrap: wrap !important;
+    width: 100% !important;
+    margin-top: 8px !important;
+  }
+
+}
