@@ -2526,3 +2526,51 @@ textarea {
   }
 
 }
+
+/* FINAL HEADER CONTROL */
+
+/* stop desktop logo from getting huge */
+.top-nav .brand img,
+.top-nav img.brand-logo,
+.top-nav img[src="/cc-logo.png"] {
+  width: 22px !important;
+  height: 22px !important;
+  max-width: 22px !important;
+  max-height: 22px !important;
+  min-width: 22px !important;
+  min-height: 22px !important;
+  object-fit: contain !important;
+  display: inline-block !important;
+  flex: 0 0 22px !important;
+}
+
+/* mobile center fix */
+@media (max-width: 768px) {
+  .top-nav-inner {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    text-align: center !important;
+    width: 100% !important;
+  }
+
+  .top-nav .brand {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 8px !important;
+    width: 100% !important;
+    margin: 0 auto 10px auto !important;
+    text-align: center !important;
+  }
+
+  .top-nav .nav-links {
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    flex-wrap: wrap !important;
+    width: 100% !important;
+    gap: 14px !important;
+  }
+}
