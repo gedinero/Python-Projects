@@ -59,17 +59,24 @@ document.addEventListener("DOMContentLoaded", () => {
 
       try {
         const response = await fetch(
-          `https://api.giphy.com/v1/gifs/search?api_key=YOUR_GIPHY_API_KEY&q=${encodeURIComponent(query)}&limit=12&rating=g`
+          `https://api.giphy.com/v1/gifs/search?api_key=fAamOwF84swNA9O56F0l3hz1G7huYaA1&q=${encodeURIComponent(query)}&limit=12&rating=g`
         );
 
         const data = await response.json();
 
-        resultsGrid.innerHTML = "";
+console.log("GIPHY RESPONSE:", data);
 
-        if (!data.data || data.data.length === 0) {
-          resultsGrid.innerHTML = "<p>No GIFs found.</p>";
-          return;
-        }
+resultsGrid.innerHTML = "";
+
+if (!response.ok || data.meta?.status !== 200) {
+  resultsGrid.innerHTML = `<p>GIF API error: ${data.meta?.msg || "Bad API response"}</p>`;
+  return;
+}
+
+if (!data.data || data.data.length === 0) {
+  resultsGrid.innerHTML = "<p>No GIFs found for that search.</p>";
+  return;
+}
 
         data.data.forEach((gif) => {
           const img = document.createElement("img");
