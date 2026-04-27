@@ -860,6 +860,12 @@ textarea {
     border: 1px solid rgba(255, 255, 255, 0.06);
 }
 
+.gif-picker-wrap {
+  display: none;
+  width: 100%;
+  margin-bottom: 16px;
+}
+
 .emoji-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(44px, 1fr));
@@ -916,6 +922,10 @@ textarea {
     color: var(--text-dim);
     font-size: 0.78rem;
     font-weight: 800;
+}
+
+.gif-picker-wrap.open {
+  display: block !important;
 }
 
 /* =========================
@@ -2434,4 +2444,20 @@ textarea {
     gap: 16px;
     width: 100%;
   }
+}
+
+/* FINAL MOBILE CHAT BOX HEIGHT */
+@media screen and (max-width: 900px) {
+  .chat-box {
+    height: 62vh !important;
+    max-height: 62vh !important;
+    min-height: 420px !important;
+    overflow-y: auto !important;
+  }
+}
+
+.gif-picker-wrap {
+  display: none;
+  width: 100%;
+  margin-bottom: 16px;
 }

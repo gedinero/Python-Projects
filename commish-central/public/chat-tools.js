@@ -1,378 +1,148 @@
 document.addEventListener("DOMContentLoaded", () => {
-    const GIPHY_API_KEY = "fAamOwF84swNA9O56F0l3hz1G7huYaA1";
-    const GIPHY_BASE_URL = "https://api.giphy.com/v1/gifs";
+  const emojis = ["😀", "😂", "🤣", "🔥", "💯", "😎", "😭", "🙌", "✅", "👀", "🏈", "🎮", "🤝", "😤"];
 
-    const EMOJIS = [
-        "😀","😂","🤣","😭","😎","🔥","💯","👀","😤","😈",
-        "🥶","🤝","🙏","💪","✅","❌","⚡","🎯","🏈","🏆",
-        "🎮","📅","📣","🚨","😬","😅","🤦","🙌","😡","❤️",
-        "💙","🖤","💚","🫡","💀","🥳","😮","🤔","😴","📸"
-    ];
+  function setupEmoji(toggleBtn, pickerWrap, emojiGrid, input, otherEmojiWraps = []) {
+    if (!toggleBtn || !pickerWrap || !emojiGrid || !input) return;
 
-    const currentUserName = localStorage.getItem("currentUser") || "Ge Dinero";
+    emojiGrid.innerHTML = "";
 
-    function getTimeStamp() {
-        return new Date().toLocaleTimeString([], {
-            hour: "numeric",
-            minute: "2-digit"
-        });
-    }
+    emojis.forEach((emoji) => {
+      const btn = document.createElement("button");
+      btn.type = "button";
+      btn.textContent = emoji;
+      btn.className = "emoji-option";
 
-    function togglePanel(targetWrap, otherWraps = []) {
-        if (!targetWrap) return;
+      btn.addEventListener("click", () => {
+        input.value += emoji;
+        input.focus();
+      });
 
-        const shouldOpen =
-            targetWrap.style.display === "none" ||
-            targetWrap.style.display === "";
+      emojiGrid.appendChild(btn);
+    });
 
-        otherWraps.forEach((wrap) => {
-            if (wrap) wrap.style.display = "none";
-        });
+    toggleBtn.addEventListener("click", () => {
+      otherEmojiWraps.forEach((wrap) => {
+        if (wrap) wrap.style.display = "none";
+      });
 
-        targetWrap.style.display = shouldOpen ? "block" : "none";
-    }
+      pickerWrap.style.display =
+        pickerWrap.style.display === "block" ? "none" : "block";
+    });
+  }
 
-    function insertEmoji(inputEl, emoji) {
-        if (!inputEl) return;
+  function setupGif(config) {
+    const gifBtn = document.getElementById(config.gifToggleBtnId);
+    const gifWrap = document.getElementById(config.gifPickerWrapId);
+    const searchInput = document.getElementById(config.gifSearchInputId);
+    const searchBtn = document.getElementById(config.gifSearchBtnId);
+    const resultsGrid = document.getElementById(config.gifResultsGridId);
+    const input = document.getElementById(config.inputId);
 
-        const start = inputEl.selectionStart ?? inputEl.value.length;
-        const end = inputEl.selectionEnd ?? inputEl.value.length;
-        const currentValue = inputEl.value;
+    if (!gifBtn || !gifWrap) return;
 
-        inputEl.value =
-            currentValue.slice(0, start) +
-            emoji +
-            currentValue.slice(end);
+    gifBtn.addEventListener("click", () => {
+      gifWrap.style.display =
+        gifWrap.style.display === "block" ? "none" : "block";
+    });
 
-        const nextPos = start + emoji.length;
-        inputEl.focus();
-        inputEl.setSelectionRange(nextPos, nextPos);
-    }
+    if (!searchBtn || !searchInput || !resultsGrid || !input) return;
 
-    function buildEmojiPicker(gridEl, inputEl) {
-        if (!gridEl || !inputEl) return;
+    searchBtn.addEventListener("click", async () => {
+      const query = searchInput.value.trim();
 
-        gridEl.innerHTML = EMOJIS.map((emoji) => {
-            return `<button type="button" class="emoji-btn" data-emoji="${emoji}">${emoji}</button>`;
-        }).join("");
+      if (!query) {
+        resultsGrid.innerHTML = "<p>Type something to search GIFs.</p>";
+        return;
+      }
 
-        gridEl.querySelectorAll(".emoji-btn").forEach((button) => {
-            button.addEventListener("click", () => {
-                insertEmoji(inputEl, button.dataset.emoji);
-            });
-        });
-    }
+      resultsGrid.innerHTML = "<p>Searching GIFs...</p>";
 
-    function appendMessage(boxEl, html) {
-        if (!boxEl) return;
-
-        const emptyText = boxEl.querySelector(".empty-text");
-        if (emptyText) emptyText.remove();
-
-        const wrapper = document.createElement("div");
-        wrapper.className = "messenger-row own-message";
-        wrapper.innerHTML = html;
-
-        boxEl.appendChild(wrapper);
-        boxEl.scrollTop = boxEl.scrollHeight;
-    }
-
-    function sendTextMessage(boxEl, inputEl) {
-        if (!boxEl || !inputEl) return;
-
-        const text = inputEl.value.trim();
-        if (!text) return;
-
-        appendMessage(boxEl, `
-            <div class="messenger-bubble-wrap own-bubble-wrap">
-                <div class="messenger-bubble">
-                    <div class="messenger-user">${currentUserName}</div>
-                    <div class="messenger-text">${text}</div>
-                    <div class="messenger-time">${getTimeStamp()}</div>
-                </div>
-            </div>
-        `);
-
-        inputEl.value = "";
-    }
-
-    function sendImageMessage(boxEl, imageUrl) {
-        if (!boxEl || !imageUrl) return;
-
-        appendMessage(boxEl, `
-            <div class="messenger-bubble-wrap own-bubble-wrap">
-                <div class="messenger-bubble">
-                    <div class="messenger-user">${currentUserName}</div>
-                    <img src="${imageUrl}" alt="Shared image" class="chat-media-image">
-                    <div class="messenger-time">${getTimeStamp()}</div>
-                </div>
-            </div>
-        `);
-    }
-
-    function sendGifMessage(boxEl, gifUrl) {
-        if (!boxEl || !gifUrl) return;
-
-        appendMessage(boxEl, `
-            <div class="messenger-bubble-wrap own-bubble-wrap">
-                <div class="messenger-bubble">
-                    <div class="messenger-user">${currentUserName}</div>
-                    <img src="${gifUrl}" alt="GIF" class="chat-media-image">
-                    <div class="messenger-time">${getTimeStamp()}</div>
-                </div>
-            </div>
-        `);
-    }
-
-    async function fetchGifs(query = "", limit = 12) {
-        const endpoint = query.trim()
-            ? `${GIPHY_BASE_URL}/search`
-            : `${GIPHY_BASE_URL}/trending`;
-
-        const params = new URLSearchParams({
-            api_key: GIPHY_API_KEY,
-            limit: String(limit),
-            rating: "pg"
-        });
-
-        if (query.trim()) {
-            params.set("q", query.trim());
-        }
-
-        const response = await fetch(`${endpoint}?${params.toString()}`);
-
-        if (!response.ok) {
-            throw new Error("Could not load GIFs.");
-        }
+      try {
+        const response = await fetch(
+          `https://api.giphy.com/v1/gifs/search?api_key=YOUR_GIPHY_API_KEY&q=${encodeURIComponent(query)}&limit=12&rating=g`
+        );
 
         const data = await response.json();
-        return data.data || [];
-    }
 
-    function renderGifResults(gridEl, gifs, boxEl, pickerWrap) {
-        if (!gridEl) return;
+        resultsGrid.innerHTML = "";
 
-        if (!gifs.length) {
-            gridEl.innerHTML = `<p class="empty-text">No GIFs found.</p>`;
-            return;
+        if (!data.data || data.data.length === 0) {
+          resultsGrid.innerHTML = "<p>No GIFs found.</p>";
+          return;
         }
 
-        gridEl.innerHTML = gifs.map((gif) => {
-            const preview =
-                gif.images?.fixed_width_small?.url ||
-                gif.images?.fixed_width?.url ||
-                "";
+        data.data.forEach((gif) => {
+          const img = document.createElement("img");
+          img.src = gif.images.fixed_height_small.url;
+          img.alt = gif.title || "GIF";
+          img.className = "gif-result";
 
-            const sendUrl =
-                gif.images?.downsized_medium?.url ||
-                gif.images?.original?.url ||
-                preview;
+          img.addEventListener("click", () => {
+            input.value = gif.images.original.url;
+            gifWrap.style.display = "none";
+            input.focus();
+          });
 
-            return `
-                <button type="button" class="gif-result-btn" data-url="${sendUrl}">
-                    <img src="${preview}" alt="${gif.title || "GIF"}" class="gif-result-image">
-                </button>
-            `;
-        }).join("");
-
-        gridEl.querySelectorAll(".gif-result-btn").forEach((button) => {
-            button.addEventListener("click", () => {
-                sendGifMessage(boxEl, button.dataset.url);
-                if (pickerWrap) pickerWrap.style.display = "none";
-            });
+          resultsGrid.appendChild(img);
         });
-    }
-
-    async function loadGifPanel(gridEl, query, boxEl, pickerWrap) {
-        if (!gridEl) return;
-
-        gridEl.innerHTML = `<p class="empty-text">Loading GIFs...</p>`;
-
-        try {
-            const gifs = await fetchGifs(query);
-            renderGifResults(gridEl, gifs, boxEl, pickerWrap);
-        } catch (error) {
-            gridEl.innerHTML = `<p class="empty-text">${error.message}</p>`;
-        }
-    }
-
-    function wireChatTools(config) {
-        const {
-            boxId,
-            inputId,
-            sendBtnId,
-            imageInputId,
-            emojiToggleBtnId,
-            emojiPickerWrapId,
-            emojiGridId,
-            gifToggleBtnId,
-            gifPickerWrapId,
-            gifSearchInputId,
-            gifSearchBtnId,
-            gifResultsGridId,
-            otherGifWrapIds = [],
-            otherEmojiWrapIds = []
-        } = config;
-
-        const boxEl = document.getElementById(boxId);
-        const inputEl = document.getElementById(inputId);
-        const sendBtnEl = document.getElementById(sendBtnId);
-        const imageInputEl = document.getElementById(imageInputId);
-
-        const emojiToggleBtnEl = document.getElementById(emojiToggleBtnId);
-        const emojiPickerWrapEl = document.getElementById(emojiPickerWrapId);
-        const emojiGridEl = document.getElementById(emojiGridId);
-
-        const gifToggleBtnEl = document.getElementById(gifToggleBtnId);
-        const gifPickerWrapEl = document.getElementById(gifPickerWrapId);
-        const gifSearchInputEl = document.getElementById(gifSearchInputId);
-        const gifSearchBtnEl = document.getElementById(gifSearchBtnId);
-        const gifResultsGridEl = document.getElementById(gifResultsGridId);
-
-        const otherGifWraps = otherGifWrapIds
-            .map((id) => document.getElementById(id))
-            .filter(Boolean);
-
-        const otherEmojiWraps = otherEmojiWrapIds
-            .map((id) => document.getElementById(id))
-            .filter(Boolean);
-
-        buildEmojiPicker(emojiGridEl, inputEl);
-
-        if (emojiToggleBtnEl) {
-            emojiToggleBtnEl.addEventListener("click", () => {
-                togglePanel(
-                    emojiPickerWrapEl,
-                    [gifPickerWrapEl, ...otherEmojiWraps, ...otherGifWraps]
-                );
-            });
-        }
-
-        if (gifToggleBtnEl) {
-            gifToggleBtnEl.addEventListener("click", async () => {
-                const opening =
-                    gifPickerWrapEl.style.display === "none" ||
-                    gifPickerWrapEl.style.display === "";
-
-                togglePanel(
-                    gifPickerWrapEl,
-                    [emojiPickerWrapEl, ...otherEmojiWraps, ...otherGifWraps]
-                );
-
-                if (opening) {
-                    await loadGifPanel(
-                        gifResultsGridEl,
-                        "",
-                        boxEl,
-                        gifPickerWrapEl
-                    );
-                }
-            });
-        }
-
-        if (gifSearchBtnEl) {
-            gifSearchBtnEl.addEventListener("click", async () => {
-                await loadGifPanel(
-                    gifResultsGridEl,
-                    gifSearchInputEl.value,
-                    boxEl,
-                    gifPickerWrapEl
-                );
-            });
-        }
-
-        if (gifSearchInputEl) {
-            gifSearchInputEl.addEventListener("keydown", async (event) => {
-                if (event.key === "Enter") {
-                    event.preventDefault();
-                    await loadGifPanel(
-                        gifResultsGridEl,
-                        gifSearchInputEl.value,
-                        boxEl,
-                        gifPickerWrapEl
-                    );
-                }
-            });
-        }
-
-        if (sendBtnEl) {
-            sendBtnEl.addEventListener("click", () => {
-                sendTextMessage(boxEl, inputEl);
-            });
-        }
-
-        if (inputEl) {
-            inputEl.addEventListener("keydown", (event) => {
-                if (event.key === "Enter") {
-                    event.preventDefault();
-                    sendTextMessage(boxEl, inputEl);
-                }
-            });
-        }
-
-        if (imageInputEl) {
-            imageInputEl.addEventListener("change", (event) => {
-                const file = event.target.files[0];
-                if (!file) return;
-
-                const reader = new FileReader();
-                reader.onload = function (e) {
-                    sendImageMessage(boxEl, e.target.result);
-                };
-                reader.readAsDataURL(file);
-                imageInputEl.value = "";
-            });
-        }
-    }
-
-    wireChatTools({
-        boxId: "chatBox",
-        inputId: "chatInput",
-        sendBtnId: "sendChatBtn",
-        imageInputId: "chatImageInput",
-        emojiToggleBtnId: "chatEmojiToggleBtn",
-        emojiPickerWrapId: "chatEmojiPickerWrap",
-        emojiGridId: "chatEmojiGrid",
-        gifToggleBtnId: "gifToggleBtn",
-        gifPickerWrapId: "gifPickerWrap",
-        gifSearchInputId: "gifSearchInput",
-        gifSearchBtnId: "gifSearchBtn",
-        gifResultsGridId: "gifResultsGrid",
-        otherGifWrapIds: ["scheduleGifPickerWrap", "tradeGifPickerWrap"],
-        otherEmojiWrapIds: ["scheduleEmojiPickerWrap", "tradeEmojiPickerWrap"]
+      } catch (error) {
+        resultsGrid.innerHTML = "<p>GIF search failed.</p>";
+        console.error("GIF search error:", error);
+      }
     });
+  }
 
-    wireChatTools({
-        boxId: "scheduleBox",
-        inputId: "scheduleInput",
-        sendBtnId: "sendScheduleBtn",
-        imageInputId: "scheduleImageInput",
-        emojiToggleBtnId: "scheduleEmojiToggleBtn",
-        emojiPickerWrapId: "scheduleEmojiPickerWrap",
-        emojiGridId: "scheduleEmojiGrid",
-        gifToggleBtnId: "scheduleGifToggleBtn",
-        gifPickerWrapId: "scheduleGifPickerWrap",
-        gifSearchInputId: "scheduleGifSearchInput",
-        gifSearchBtnId: "scheduleGifSearchBtn",
-        gifResultsGridId: "scheduleGifResultsGrid",
-        otherGifWrapIds: ["gifPickerWrap", "tradeGifPickerWrap"],
-        otherEmojiWrapIds: ["chatEmojiPickerWrap", "tradeEmojiPickerWrap"]
-    });
+  function wireChatTools(config) {
+    const input = document.getElementById(config.inputId);
 
-    wireChatTools({
-        boxId: "tradeBox",
-        inputId: "tradeInput",
-        sendBtnId: "sendTradeBtn",
-        imageInputId: "tradeImageInput",
-        emojiToggleBtnId: "tradeEmojiToggleBtn",
-        emojiPickerWrapId: "tradeEmojiPickerWrap",
-        emojiGridId: "tradeEmojiGrid",
-        gifToggleBtnId: "tradeGifToggleBtn",
-        gifPickerWrapId: "tradeGifPickerWrap",
-        gifSearchInputId: "tradeGifSearchInput",
-        gifSearchBtnId: "tradeGifSearchBtn",
-        gifResultsGridId: "tradeGifResultsGrid",
-        otherGifWrapIds: ["gifPickerWrap", "scheduleGifPickerWrap"],
-        otherEmojiWrapIds: ["chatEmojiPickerWrap", "scheduleEmojiPickerWrap"]
-    });
+    const emojiBtn = document.getElementById(config.emojiToggleBtnId);
+    const emojiWrap = document.getElementById(config.emojiPickerWrapId);
+    const emojiGrid = document.getElementById(config.emojiGridId);
+
+    const otherEmojiWraps = (config.otherEmojiWrapIds || [])
+      .map((id) => document.getElementById(id))
+      .filter(Boolean);
+
+    setupEmoji(emojiBtn, emojiWrap, emojiGrid, input, otherEmojiWraps);
+    setupGif(config);
+  }
+
+  wireChatTools({
+    inputId: "chatInput",
+    emojiToggleBtnId: "chatEmojiToggleBtn",
+    emojiPickerWrapId: "chatEmojiPickerWrap",
+    emojiGridId: "chatEmojiGrid",
+    gifToggleBtnId: "gifToggleBtn",
+    gifPickerWrapId: "gifPickerWrap",
+    gifSearchInputId: "gifSearchInput",
+    gifSearchBtnId: "gifSearchBtn",
+    gifResultsGridId: "gifResultsGrid",
+    otherEmojiWrapIds: ["scheduleEmojiPickerWrap", "tradeEmojiPickerWrap"],
+  });
+
+  wireChatTools({
+    inputId: "scheduleInput",
+    emojiToggleBtnId: "scheduleEmojiToggleBtn",
+    emojiPickerWrapId: "scheduleEmojiPickerWrap",
+    emojiGridId: "scheduleEmojiGrid",
+    gifToggleBtnId: "scheduleGifToggleBtn",
+    gifPickerWrapId: "scheduleGifPickerWrap",
+    gifSearchInputId: "scheduleGifSearchInput",
+    gifSearchBtnId: "scheduleGifSearchBtn",
+    gifResultsGridId: "scheduleGifResultsGrid",
+    otherEmojiWrapIds: ["chatEmojiPickerWrap", "tradeEmojiPickerWrap"],
+  });
+
+  wireChatTools({
+    inputId: "tradeInput",
+    emojiToggleBtnId: "tradeEmojiToggleBtn",
+    emojiPickerWrapId: "tradeEmojiPickerWrap",
+    emojiGridId: "tradeEmojiGrid",
+    gifToggleBtnId: "tradeGifToggleBtn",
+    gifPickerWrapId: "tradeGifPickerWrap",
+    gifSearchInputId: "tradeGifSearchInput",
+    gifSearchBtnId: "tradeGifSearchBtn",
+    gifResultsGridId: "tradeGifResultsGrid",
+    otherEmojiWrapIds: ["chatEmojiPickerWrap", "scheduleEmojiPickerWrap"],
+  });
 });
