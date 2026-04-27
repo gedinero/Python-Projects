@@ -2552,37 +2552,3 @@ textarea {
     flex-direction: column !important;
     align-items: center !important;
   }
-
-  /* KILL EVERY FAKE HEADER LOGO */
-.top-nav *::before,
-.top-nav *::after {
-  content: none !important;
-  display: none !important;
-  background-image: none !important;
-}
-
-/* FORCE BRAND TO STAY INLINE AND CENTERED */
-.brand {
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  flex-direction: row !important;
-  gap: 8px !important;
-}
-
-/* PREVENT WRAPPING (this is the real culprit) */
-.brand {
-  flex-wrap: nowrap !important;
-}
-
-/* CENTER THE WHOLE TOP BAR ON MOBILE */
-@media (max-width: 768px) {
-  .top-nav-inner {
-    flex-direction: column !important;
-    align-items: center !important;
-  }
-
-  .brand {
-    justify-content: center !important;
-  }
-}
