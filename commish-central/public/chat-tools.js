@@ -15,7 +15,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const messageInput = document.getElementById("chatInput");
 
-  const GIPHY_API_KEY = "PASTE_YOUR_GIPHY_KEY_HERE";
+  const GIPHY_API_KEY = "fAamOwF84swNA9O56F0l3hz1G7huYaA1";
 
   if (
     !emojiBtn ||
@@ -113,13 +113,13 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   async function loadTrendingGifs() {
-    const url = `https://api.giphy.com/v1/gifs/trending?api_key=${GIPHY_API_KEY}&limit=12&rating=pg-13`;
+    const url = `https://api.giphy.com/v1/gifs/trending?api_key=fAamOwF84swNA9O56F0l3hz1G7huYaA1&limit=12&rating=pg-13`;
     await fetchAndRenderGifs(url);
   }
 
   async function searchGifs(searchTerm) {
     const encodedSearch = encodeURIComponent(searchTerm);
-    const url = `https://api.giphy.com/v1/gifs/search?api_key=${GIPHY_API_KEY}&q=${encodedSearch}&limit=12&rating=pg-13`;
+    const url = `https://api.giphy.com/v1/gifs/search?api_key=fAamOwF84swNA9O56F0l3hz1G7huYaA1&q=${encodedSearch}&limit=12&rating=pg-13`;
     await fetchAndRenderGifs(url);
   }
 
