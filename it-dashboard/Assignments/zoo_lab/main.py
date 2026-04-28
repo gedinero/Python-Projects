@@ -1,3 +1,6 @@
+# Joshua Gordon
+# Zoo Lab Project
+
 from animal import Dog, Bird, Fish
 from habitat import Habitat
 from zoo import Zoo
