@@ -1,7 +1,7 @@
 # Final Project - Budget Tracker GUI
 # Author: Joshua Gordon
 # Date: 2026
-# Description: A modern GUI-based budget tracker with reports.
+# Description: A GUI-based budget tracker with reports.
 
 import tkinter as tk
 from tkinter import messagebox
